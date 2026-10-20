@@ -373,7 +373,7 @@ export function OpeningEnvelope({ reducedMotion, onReveal, onDone, onPlay }: Ope
           aria-label={seal.ariaLabel}
         >
           <img className="env__seal-glow" src={card.sealImage} alt="" aria-hidden="true" />
-          <img src={card.sealImage} alt="" />
+          <img src={card.sealImage} alt="" /> 
         </button>
 
         <button
