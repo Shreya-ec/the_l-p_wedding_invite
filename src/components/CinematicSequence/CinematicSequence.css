@@ -1,0 +1,679 @@
+.cinema {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.cinema__viewport {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--ivory);
+}
+
+.scene-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.02);
+}
+
+.scene-bg--one {
+  z-index: 1;
+}
+
+.scene-bg--two {
+  z-index: 2;
+  opacity: 0;
+}
+
+/* Groups both scenes' text so the stage can fade it as one; above the couple. */
+.cinema__copy {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.cinema__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at center, rgba(247, 241, 232, 0.18), transparent 55%),
+    linear-gradient(180deg, rgba(247, 241, 232, 0.08), transparent 28%);
+}
+
+.scene-copy {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.35rem;
+  padding: max(1rem, env(safe-area-inset-top)) max(1.25rem, env(safe-area-inset-right))
+    max(1rem, env(safe-area-inset-bottom)) max(1.25rem, env(safe-area-inset-left));
+  color: var(--ink);
+  pointer-events: none;
+}
+
+/* Later cinema copy stays hidden until scroll reaches it, so the open card is section one. */
+.scene-copy--two {
+  opacity: 0;
+}
+
+.scene-logo {
+  width: clamp(4.4rem, 14vw, 8.5rem);
+  height: auto;
+  margin: 0 auto 0.35rem;
+  filter: drop-shadow(0 8px 16px rgba(247, 241, 232, 0.55));
+}
+
+.scene-title {
+  margin: 0;
+  max-width: min(92vw, 16ch);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.1rem, 7.2vw, 4.8rem);
+  line-height: 1.12;
+  letter-spacing: 0.01em;
+  color: #4a3530;
+  text-shadow: 0 2px 24px rgba(247, 241, 232, 0.8);
+}
+
+/* Hand-lettered title image (1157×219). */
+.scene-title--lettering {
+  max-width: none;
+  line-height: 0;
+  /* Soft ivory glow behind the strokes (on the heading, so the image's own fade can use filter). */
+  filter: drop-shadow(0 2px 14px rgba(247, 241, 232, 0.85));
+}
+
+.scene-lettering {
+  display: block;
+  width: min(88vw, 32rem);
+  height: auto;
+}
+
+.scene-title--second {
+  font-size: clamp(1.85rem, 5.4vw, 3.8rem);
+}
+
+.scene-kicker {
+  margin: 0;
+  font-family: var(--font-script);
+  font-style: italic;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  color: var(--dusty-mauve);
+}
+
+.scene-support {
+  margin: 0.7rem 0 0;
+  max-width: min(34rem, 86vw);
+  font-size: clamp(0.8rem, 2.2vw, 0.98rem);
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 768px) {
+  .scene-title {
+    font-size: clamp(1.85rem, 8.4vw, 2.7rem);
+  }
+}
+
+@media (max-height: 640px) and (orientation: landscape) {
+  .scene-lettering {
+    width: min(70vw, 28rem);
+  }
+
+  .scene-logo {
+    width: clamp(3.2rem, 10vh, 5rem);
+    margin-bottom: 0.15rem;
+  }
+
+  .scene-title {
+    font-size: clamp(1.5rem, 6vh, 2.4rem);
+  }
+}
+
+/* ---- Second scene: framed portrait artwork + countdown ------------------ */
+/*
+ * The dusk palace artwork is portrait (736×1308). It is shown whole in height,
+ * centred, with a pre-blurred surround on wider screens (as the programme cards
+ * do), and the copy sits in its open sky above the palace roofline.
+ */
+
+.scene-bg--framed {
+  transform: none;
+  background: #2c2a44; /* dusk, behind the artwork while it loads */
+}
+
+/* The crossfading dusk layer gets its own compositing layer, so its opacity
+   changes don't repaint the whole stack (smooth on desktop). */
+.scene-bg--two {
+  will-change: opacity;
+}
+
+.scene-frame__surround {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  /* Frame the sky, lanterns and florals, not the couple, in the soft surround. */
+  background-position: center 22%;
+}
+
+.scene-frame__art {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  width: calc(100vh * var(--art-aspect));
+  width: calc(100dvh * var(--art-aspect));
+  transform: translateX(-50%);
+  background-size: cover;
+  background-position: center;
+}
+
+@media (min-aspect-ratio: 3/5) {
+  .scene-frame__art {
+    mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+  }
+}
+
+/* Dusk-toned veil at the top so ivory text reads over fireworks and flowers. */
+.scene-frame__veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(26, 24, 46, 0.66) 0%,
+    rgba(26, 24, 46, 0.5) 22%,
+    rgba(26, 24, 46, 0.26) 36%,
+    rgba(26, 24, 46, 0) 52%
+  );
+}
+
+.scene-copy--framed {
+  left: 50%;
+  right: auto;
+  width: min(100vw, calc(100vh * var(--art-aspect)));
+  width: min(100vw, calc(100dvh * var(--art-aspect)));
+  transform: translateX(-50%);
+  justify-content: stretch;
+  padding-top: max(env(safe-area-inset-top), 1rem);
+  padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+  container-type: size;
+  color: var(--ivory);
+}
+
+/*
+ * Three rows with equal space above and below the countdown, so the countdown
+ * sits at the true centre of the screen; the invitation line and scratch card
+ * rest just above it.
+ */
+.scene-two__inner {
+  display: grid;
+  grid-template-rows: 1fr auto 1fr;
+  justify-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.scene-two__lead {
+  grid-row: 1;
+  align-self: end;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: min(3.2cqh, 1.5rem);
+}
+
+.scene-copy--framed .scene-kicker {
+  color: var(--gold-soft);
+  font-size: min(6cqw, 3.2cqh);
+  text-shadow: 0 1px 10px rgba(20, 16, 34, 0.6);
+}
+
+.scene-copy--framed .scene-title {
+  max-width: none;
+  color: var(--ivory);
+  font-size: min(10.5cqw, 5.8cqh);
+  line-height: 1.08;
+  text-shadow: 0 2px 18px rgba(20, 16, 34, 0.6);
+}
+
+.scene-two__divider {
+  width: min(48cqw, 15rem);
+  margin: min(1.6cqh, 0.8rem) 0 min(2cqh, 1rem);
+  font-size: max(0.6rem, min(2.2cqw, 0.75rem));
+}
+
+.scene-two__divider.ornament {
+  color: var(--gold-soft);
+}
+
+/* Scratch card: foil over the dates. Interactive only while this scene is shown. */
+.scene-two__scratch {
+  width: min(86cqw, 22rem);
+  min-height: max(3rem, min(12cqh, 5.6rem));
+  pointer-events: none;
+}
+
+@media (pointer: coarse) {
+  .scene-two__scratch {
+    min-height: max(3.25rem, min(14cqh, 6.2rem));
+  }
+}
+
+.scene-copy--two.is-interactive .scene-two__scratch {
+  pointer-events: auto;
+}
+
+/* The card is its own size reference, so the dates always sit well inside the foil. */
+.scene-two__scratch {
+  container-type: inline-size;
+  overflow: hidden;
+}
+
+.scene-two__dates {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: min(8.2cqi, 2.1rem);
+  line-height: 1.1;
+  white-space: nowrap;
+  font-variant-numeric: lining-nums;
+  color: var(--ivory);
+  text-shadow: 0 2px 14px rgba(20, 16, 34, 0.55);
+}
+
+.scene-two__dates-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 2.75rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.scene-two__dates-btn:focus-visible {
+  outline: 2px solid var(--gold-soft);
+  outline-offset: 3px;
+}
+
+/* The countdown, highlighted: a dusk-glass panel with the invitation's gold hairline. */
+.scene-two__countdown-panel {
+  grid-row: 2;
+  position: relative;
+  max-width: calc(100% - 1rem);
+  padding: min(2.6cqh, 1.25rem) min(2.6cqw, 1.4rem);
+  border: 1px solid rgba(230, 211, 163, 0.6);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(34, 30, 58, 0.66), rgba(26, 24, 46, 0.52));
+  box-shadow:
+    inset 0 0 0 4px rgba(26, 24, 46, 0.25),
+    inset 0 0 0 5px rgba(230, 211, 163, 0.22),
+    0 0 46px rgba(230, 211, 163, 0.16),
+    0 18px 40px -18px rgba(10, 8, 20, 0.7);
+}
+
+.scene-two__countdown-panel .countdown__value {
+  font-size: min(12cqw, 7.4cqh);
+  text-shadow: 0 0 18px rgba(230, 211, 163, 0.28), 0 2px 12px rgba(10, 8, 20, 0.6);
+}
+
+.scene-two__countdown-panel .countdown__unit {
+  padding: 0 min(2.6cqw, 1.5rem);
+}
+
+@media (orientation: landscape) and (max-height: 560px) {
+  .scene-copy--framed {
+    width: 100vw;
+    padding-top: max(env(safe-area-inset-top), 1rem);
+  }
+
+  .scene-copy--framed .scene-title {
+    font-size: clamp(1.4rem, 9vh, 2.2rem);
+  }
+
+  .scene-copy--framed .countdown__value {
+    font-size: clamp(1.6rem, 11vh, 2.6rem);
+  }
+}
+
+/* ---- Names & couple (after the title, same pavilion background) ------- */
+/*
+ * Phones: names and the invitation line at the top, the couple standing in a
+ * softly lit arch below. Wider screens: couple on the left, names on the right.
+ * Only the couple's photo, the arch and the petals are new; type and colours
+ * are the invitation's own.
+ */
+
+.scene-names {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  justify-items: center;
+  padding:
+    max(env(safe-area-inset-top), 6dvh)
+    max(1.25rem, env(safe-area-inset-right))
+    0
+    max(1.25rem, env(safe-area-inset-left));
+  color: var(--ink);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scene-names__text {
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.scene-names__title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: min(13vw, 6.6dvh, 4.6rem);
+  line-height: 1;
+  color: var(--ink);
+  text-shadow: 0 2px 18px rgba(247, 241, 232, 0.9);
+}
+
+.scene-names__name {
+  display: block;
+  letter-spacing: 0.04em;
+}
+
+.scene-names__amp {
+  display: block;
+  margin: 0.04em 0 0.02em;
+  font-style: italic;
+  font-size: 0.72em;
+  color: var(--gold-deep);
+}
+
+.scene-names__line {
+  max-width: 22rem;
+  margin: min(2.2dvh, 1.1rem) 0 0;
+  font-family: var(--font-body);
+  font-size: clamp(0.82rem, 3.6vw, 1rem);
+  line-height: 1.6;
+  letter-spacing: 0.03em;
+  color: var(--ink-soft);
+  text-shadow: 0 1px 12px rgba(247, 241, 232, 0.95);
+}
+
+.scene-names__portrait {
+  grid-row: 2;
+  position: relative;
+  align-self: end;
+  /* Explicit height (not a % of the grid row) so the width resolves from the aspect ratio. */
+  height: min(60vh, 128vw);
+  height: min(60dvh, 128vw);
+  aspect-ratio: 0.74;
+}
+
+/* A softly lit arch behind the couple, with the invitation's gold hairline. */
+.scene-names__arch {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  top: 6%;
+  bottom: 0;
+  border: 1px solid rgba(196, 161, 92, 0.6);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(255, 252, 245, 0.9), rgba(247, 241, 232, 0.55) 60%, rgba(247, 241, 232, 0.15));
+  box-shadow: 0 0 60px rgba(230, 211, 163, 0.35);
+}
+
+.scene-names__couple {
+  position: absolute;
+  /* Centred with auto margins (no transform), so the reveal's scale never fights it. */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0 auto;
+  height: 96%;
+  width: auto;
+  max-width: none;
+  transform-origin: 50% 100%;
+  /* No drop-shadow: the arch's glow separates the couple, and a filter on this large
+     image would be re-rendered on every frame of the reveal. */
+  mask-image: linear-gradient(to top, transparent 0%, #000 6%, #000 100%);
+  -webkit-mask-image: linear-gradient(to top, transparent 0%, #000 6%, #000 100%);
+}
+
+/* Petals start hidden behind the couple's shoulders; the reveal throws them out. */
+.scene-names__petals {
+  position: absolute;
+  left: 50%;
+  top: 34%;
+  width: 0;
+  height: 0;
+}
+
+.scene-names__petal {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 80% 0 80% 0;
+  opacity: 0;
+}
+
+.scene-names__petal--rose {
+  background: linear-gradient(135deg, #f2c6cc, #c98a96);
+}
+
+.scene-names__petal--blush {
+  background: linear-gradient(135deg, #fbe4e2, #e2a9b0);
+}
+
+.scene-names__petal--gold {
+  background: linear-gradient(135deg, var(--gold-soft), var(--antique-gold));
+}
+
+/* Wider screens: couple on the left, names on the right. */
+@media (orientation: landscape) {
+  .scene-names {
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    padding-top: max(env(safe-area-inset-top), 4dvh);
+  }
+
+  .scene-names__portrait {
+    grid-row: 1;
+    grid-column: 1;
+    height: 86vh;
+    height: 86dvh;
+    align-self: end;
+    justify-self: end;
+    margin-right: clamp(0rem, 3vw, 3rem);
+  }
+
+  .scene-names__text {
+    grid-row: 1;
+    grid-column: 2;
+    justify-self: start;
+    margin-left: clamp(0rem, 2vw, 2rem);
+  }
+
+  .scene-names__title {
+    font-size: min(7.5vw, 11dvh, 5.4rem);
+  }
+
+  .scene-names__line {
+    font-size: clamp(0.82rem, 1.4vw, 1.05rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-names__petals {
+    display: none;
+  }
+}
+
+/* "Countdown to Forever": a smaller, refined two-line lockup. */
+.scene-copy--framed .scene-two__heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: min(8.4cqw, 4.6cqh);
+  line-height: 1;
+}
+
+.scene-two__heading-main {
+  padding-left: 0.32em;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.5em;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ivory);
+}
+
+.scene-two__heading-tail {
+  margin-top: 0.12em;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--ivory);
+}
+
+.scene-two__heading-link {
+  font-size: 0.66em;
+  color: var(--gold-soft);
+}
+
+@media (orientation: landscape) and (max-height: 560px) {
+  .scene-copy--framed .scene-two__heading {
+    font-size: clamp(1.4rem, 9vh, 2rem);
+  }
+}
+
+/* Quiet gilded cue on the title scene: waits, then fades up. Hidden once scrolling begins. */
+.scroll-cue {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: max(2.4rem, calc(env(safe-area-inset-bottom) + 1.35rem));
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px);
+  color: var(--gold-deep);
+  transition:
+    opacity 1.4s ease,
+    transform 1.4s ease;
+}
+
+.scroll-cue__mark {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.scroll-cue__word {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.15rem, 3.6vw, 1.45rem);
+  letter-spacing: 0.22em;
+  line-height: 1;
+  padding-left: 0.22em;
+  text-shadow: 0 1px 0 rgba(255, 248, 240, 0.7);
+}
+
+.scroll-cue__rule {
+  width: 2.75rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-deep) 42%, var(--gold-deep) 58%, transparent);
+  box-shadow: 0 1px 0 rgba(255, 248, 240, 0.65);
+}
+
+.scroll-cue__chevron {
+  width: 1.35rem;
+  height: auto;
+  margin-top: -0.05rem;
+  overflow: visible;
+  fill: none;
+  stroke: var(--gold-deep);
+  stroke-width: 1.15;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 1px 0 rgba(255, 248, 240, 0.75));
+}
+
+.scroll-cue.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-cue.is-visible .scroll-cue__chevron {
+  animation: scroll-cue-fall 1.8s ease-in-out infinite;
+}
+
+.scroll-cue.is-gone {
+  opacity: 0;
+  transform: translateY(6px);
+  transition-duration: 0.4s;
+}
+
+.scroll-cue.is-gone .scroll-cue__chevron {
+  animation: none;
+}
+
+.scroll-cue--reduced {
+  transition-duration: 0.2s;
+}
+
+.scroll-cue--reduced .scroll-cue__chevron {
+  animation: none;
+}
+
+@keyframes scroll-cue-fall {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(-2px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(3px);
+  }
+}
+
+/* First section: the logo and lettering start 40% from the top of the screen. */
+.scene-copy--one {
+  justify-content: flex-start;
+  padding-top: 40vh;
+  padding-top: 40dvh;
+}

@@ -1,0 +1,143 @@
+:root {
+  --ivory: #f7f1e8;
+  --ivory-deep: #efe4d4;
+  --paper: #f4ece3;
+  --dusty-rose: #b98990;
+  --dusty-mauve: #8f6b73;
+  --rose-deep: #7a4f58;
+  --antique-gold: #c4a15c;
+  --gold-deep: #8d6b32;
+  --gold-soft: #e6d3a3;
+  --ink: #3c2b2e;
+  --ink-soft: #5c4549;
+  --seal: #8a5b63;
+  --seal-light: #b07a82;
+  --seal-shadow: #5c353c;
+  --shadow: rgba(62, 38, 42, 0.28);
+  /* Display: readable high-contrast serif. Accent roles use its italic. */
+  --font-display: "Cormorant Garamond", "Cormorant", "Libre Baskerville", Georgia, serif;
+  --font-opening: var(--font-display);
+  --font-body: "Libre Baskerville", Georgia, serif;
+  --font-script: var(--font-display);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+/* No sideways scrolling. On html it applies to the window; body uses clip, which
+   (unlike hidden) does not create a scroll container, so position: sticky works. */
+html {
+  overflow-x: clip;
+  overflow-y: auto;
+  overflow-anchor: none;
+  overscroll-behavior-x: none;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  width: 100%;
+  max-width: 100%;
+}
+
+html::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+body {
+  overflow-x: clip;
+  overscroll-behavior-x: none;
+  scrollbar-width: none;
+  width: 100%;
+  max-width: 100%;
+}
+
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sound-toggle {
+  position: fixed;
+  top: max(0.75rem, env(safe-area-inset-top));
+  right: max(0.75rem, env(safe-area-inset-right));
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(60, 43, 46, 0.42);
+  color: var(--ivory);
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+.sound-toggle svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sound-toggle:focus-visible {
+  outline: 2px solid var(--gold-soft);
+  outline-offset: 3px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+html.is-envelope,
+html.is-envelope body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

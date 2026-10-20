@@ -1,0 +1,122 @@
+/*
+ * Wedding countdown. Ivory Cormorant numerals with lining, fixed-width digits
+ * (no sideways jitter), Libre Baskerville small capitals for labels, and fine
+ * gold hairlines between units, the invitation's existing vocabulary.
+ * Sized with container units of the enclosing scene frame.
+ */
+
+.countdown {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  color: var(--ivory);
+}
+
+.countdown__unit {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  padding: 0 min(4.2cqw, 1.6rem);
+}
+
+/* Gold hairline between units, fading at both ends. */
+.countdown__rule {
+  position: absolute;
+  left: 0;
+  top: 12%;
+  bottom: 12%;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(230, 211, 163, 0.75), transparent);
+}
+
+.countdown__value {
+  display: flex;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: min(12cqw, 6.4cqh);
+  line-height: 1;
+  font-variant-numeric: lining-nums tabular-nums;
+  text-shadow: 0 2px 14px rgba(20, 16, 34, 0.55);
+}
+
+.countdown__digit {
+  position: relative;
+  display: inline-grid;
+  width: 0.56em;
+  justify-items: center;
+  overflow: visible;
+}
+
+/* Stacked in one grid cell: the outgoing and incoming glyphs share the same place. */
+.countdown__glyph {
+  grid-area: 1 / 1;
+}
+
+.countdown__glyph--in {
+  animation: countdown-in 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.countdown__glyph--out {
+  animation: countdown-out 0.5s ease-in both;
+}
+
+@keyframes countdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.1em);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes countdown-out {
+  from {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-0.1em);
+    filter: blur(2px);
+  }
+}
+
+.countdown__label {
+  margin-top: min(1.6cqh, 0.7rem);
+  padding-left: 0.2em;
+  font-family: var(--font-body);
+  font-size: max(0.66rem, min(2.5cqw, 0.74rem));
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  text-shadow: 0 1px 8px rgba(20, 16, 34, 0.7);
+}
+
+.countdown__message {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: min(8cqw, 4.4cqh);
+  line-height: 1.2;
+  color: var(--ivory);
+  text-shadow: 0 2px 14px rgba(20, 16, 34, 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .countdown__glyph--in,
+  .countdown__glyph--out {
+    animation: none;
+  }
+
+  .countdown__glyph--out {
+    display: none;
+  }
+}

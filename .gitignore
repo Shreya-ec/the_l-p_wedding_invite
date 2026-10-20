@@ -1,0 +1,10 @@
+node_modules
+dist
+.venv
+.DS_Store
+*.local
+.vercel
+tsconfig.tsbuildinfo
+public/images/card-source.jpg
+public/images/couple-source.jpg
+public/images/lp-logo-source.jpg

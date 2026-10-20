@@ -1,0 +1,338 @@
+/*
+ * The Wedding Venue — closing card of the invitation.
+ * Same hierarchy as the programme days (small-caps kicker → display title →
+ * gold divider → details), set over the watercolour pavilion that opened the
+ * invitation, so the experience ends where it began.
+ * The final scene of the fixed stage: fitted to the screen, with the map taking
+ * the space that remains; very short screens scroll within the scene.
+ */
+
+.venue {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding:
+    max(clamp(1.5rem, 6vh, 4rem), env(safe-area-inset-top))
+    max(1.25rem, env(safe-area-inset-right))
+    max(clamp(1.25rem, 4vh, 3rem), env(safe-area-inset-bottom))
+    max(1.25rem, env(safe-area-inset-left));
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.venue__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-size: cover;
+  background-position: center 70%;
+  opacity: 0.6;
+  filter: saturate(0.85);
+}
+
+/* Strong ivory light at the centre keeps every line legible over the artwork. */
+.venue__veil {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 72% 62% at 50% 46%, rgba(247, 241, 232, 0.94), rgba(247, 241, 232, 0.76) 62%, rgba(247, 241, 232, 0.5));
+}
+
+.venue__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(100%, 44rem);
+  max-height: 100%;
+  /* Centred in the frame when it fits; the card scrolls when it doesn't. */
+  margin: auto 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  pointer-events: auto;
+  text-align: center;
+}
+
+.venue__inner::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+.venue__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Matches .programme__kicker. */
+.venue__kicker {
+  margin: 0 0 0.75rem;
+  padding-left: 0.34em;
+  font-family: var(--font-body);
+  font-size: clamp(0.66rem, 1.7vw, 0.8rem);
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+
+/* Matches .programme__title, one step larger: the venue is the final destination. */
+.venue__name {
+  margin: 0;
+  max-width: 16ch;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.2rem, 7vw, 3.7rem);
+  line-height: 1.06;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  text-shadow: 0 2px 18px rgba(247, 241, 232, 0.85);
+  text-wrap: balance;
+}
+
+.venue__divider {
+  width: min(15rem, 64%);
+  margin: 1.1rem 0 0.95rem;
+  font-size: clamp(0.72rem, 1.6vw, 0.86rem);
+}
+
+.venue__address {
+  font-style: normal;
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 2.4vw, 1.05rem);
+  letter-spacing: 0.06em;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+/* ---- Map ------------------------------------------------------------ */
+
+.venue__map {
+  width: 100%;
+  margin: clamp(1rem, 3.5vh, 2.4rem) 0 0;
+}
+
+/* A fine gilded mat around the map, like the arch's gold edge. */
+.venue__map-frame {
+  padding: 6px;
+  border: 1px solid rgba(196, 161, 92, 0.6);
+  border-radius: 16px;
+  background: rgba(247, 241, 232, 0.7);
+  box-shadow: 0 22px 44px -26px var(--shadow);
+}
+
+.venue__map-window {
+  position: relative;
+  display: block;
+  cursor: pointer;
+  /* Full width always; the height cap below must not narrow it. */
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  /* Never taller than the frame can spare, so the scene fits the screen. */
+  max-height: max(11rem, calc(100dvh - 27rem));
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--ivory-deep);
+}
+
+
+
+
+
+/* Same pill language as Get Directions, quieter. */
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ---- Directions ------------------------------------------------------ */
+
+.venue__directions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: 0.6rem;
+  min-height: 2.9rem;
+  min-width: 2.75rem;
+  margin-top: clamp(1rem, 3vh, 2rem);
+  padding: 0.8rem 1.7rem 0.8rem 1.5rem;
+  border: 1px solid var(--antique-gold);
+  border-radius: 999px;
+  background: rgba(247, 241, 232, 0.8);
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--rose-deep);
+  transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease;
+}
+
+.venue__directions:hover {
+  border-color: var(--gold-deep);
+  background: rgba(230, 211, 163, 0.32);
+  color: var(--ink);
+}
+
+.venue__directions:focus-visible {
+  outline: 2px solid var(--antique-gold);
+  outline-offset: 3px;
+}
+
+.venue__directions-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+  fill: none;
+  stroke: var(--antique-gold);
+  stroke-width: 1.1;
+}
+
+/* ---- Responsive ------------------------------------------------------ */
+
+@media (min-width: 900px) {
+  .venue__name {
+    max-width: none;
+  }
+
+  .venue__map-window {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media (max-width: 640px) {
+  .venue__map-window {
+    aspect-ratio: 4 / 3.4;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 560px) {
+  /* Phones on their side: heading on the left, map and directions on the right. */
+  .venue__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    grid-template-rows: auto auto;
+    column-gap: clamp(1.25rem, 4vw, 2.5rem);
+    align-items: center;
+    width: min(100%, 58rem);
+  }
+
+  .venue__header {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  .venue__name {
+    font-size: clamp(1.7rem, 9vh, 2.4rem);
+  }
+
+  .venue__map {
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0;
+  }
+
+  .venue__directions {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: center;
+    margin-top: 0.75rem;
+  }
+
+  .venue__map-window {
+    max-height: calc(100dvh - 7.5rem);
+  }
+
+  .venue__map-window {
+    aspect-ratio: 21 / 9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .venue__directions {
+    transition: none;
+  }
+}
+
+/* ---- Map still + "Open in Google Maps" ---------------------------------- */
+
+.venue__map-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Keep the venue's pin near the centre of the frame at every shape. */
+  object-position: 48% 44%;
+  filter: saturate(0.88) sepia(0.06);
+}
+
+/* The only thing over the map: a gently breathing call to open it. */
+.venue__map-open {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 12%;
+  width: max-content;
+  min-height: 2.75rem;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 0.7rem 1.35rem;
+  border: 1px solid var(--antique-gold);
+  border-radius: 999px;
+  background: rgba(247, 241, 232, 0.94);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--rose-deep);
+  box-shadow: 0 6px 18px -8px rgba(60, 43, 46, 0.45);
+  animation: venue-map-breathe 3.2s ease-in-out infinite;
+}
+
+@keyframes venue-map-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 6px 18px -8px rgba(60, 43, 46, 0.45), 0 0 0 0 rgba(196, 161, 92, 0);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 8px 22px -8px rgba(60, 43, 46, 0.5), 0 0 0 7px rgba(196, 161, 92, 0.18);
+  }
+}
+
+.venue__map-window:hover .venue__map-open {
+  background: #fffaf0;
+  border-color: var(--gold-deep);
+}
+
+.venue__map-window:focus-visible {
+  outline: 2px solid var(--antique-gold);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .venue__map-open {
+    animation: none;
+  }
+}

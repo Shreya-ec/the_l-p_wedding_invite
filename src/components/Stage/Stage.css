@@ -1,0 +1,40 @@
+.stage {
+  position: relative;
+}
+
+/* The fixed picture frame: stays put while the runway scrolls beneath it. */
+.stage__viewport {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--paper);
+  /* Vertical swipes move the invitation; the scratch foil overrides this locally. */
+  touch-action: pan-y;
+}
+
+/* Every scene is a full-frame layer, stacked in story order. */
+.stage__viewport > .stage__layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/*
+ * The current picture does not capture the wheel: scrolling always advances
+ * the invitation. Interactive children (links, the scratch foil, a scene's
+ * inner card) set pointer-events themselves.
+ */
+.stage__viewport > .stage__layer.is-current {
+  pointer-events: none;
+}
+
+.stage__viewport > .stage__layer:not(.is-current) * {
+  pointer-events: none !important;
+}
+
+/* Before any script runs, only the first scene is visible: no stacked flash on load. */
+.stage__viewport > .stage__layer ~ .stage__layer {
+  opacity: 0;
+}

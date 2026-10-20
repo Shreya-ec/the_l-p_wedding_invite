@@ -1,0 +1,299 @@
+/*
+ * Wedding Celebrations — the programme scene.
+ * Follows the cinematic scene pattern: one full-viewport, pinned frame.
+ * Each day's portrait artwork is shown whole in height and the copy sits in
+ * its open area (the gilded arch, the space between the haldi garlands),
+ * like text printed on an invitation card. Geometry comes from config via
+ * --art-aspect and --copy-top/right/bottom/left on the section.
+ * All arch-relative sizes use container units (cqh/cqw) of .programme__panel,
+ * so the composition holds from small phones to wide desktops.
+ */
+
+.programme {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.programme__viewport {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+/* ---- Artwork layers ------------------------------------------------- */
+
+.programme__surround {
+  position: absolute;
+  inset: -6%;
+  background-size: cover;
+  background-position: center;
+  filter: blur(22px) saturate(0.9);
+  transform: scale(1.04);
+}
+
+/* Pre-blurred artwork: the same look, without re-running a large blur filter while scrolling. */
+.programme__surround--soft {
+  inset: 0;
+  filter: none;
+  transform: none;
+}
+
+.programme__surround-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(247, 241, 232, 0.42), rgba(247, 241, 232, 0.12) 34%,
+      rgba(247, 241, 232, 0.12) 66%, rgba(247, 241, 232, 0.42));
+}
+
+.programme__panel {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  width: min(100%, calc(100vh * var(--art-aspect, 0.5625)));
+  width: min(100%, calc(100dvh * var(--art-aspect, 0.5625)));
+  max-width: 100%;
+  transform: translateX(-50%);
+  container-type: size;
+}
+
+.programme__art {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Wherever the viewport is wider than the portrait art, melt its edges into the surround. */
+@media (min-aspect-ratio: 3/5) {
+  .programme__art {
+    mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+  }
+}
+
+/* A breath of ivory light inside the arch, behind the copy, for legibility. */
+.programme__glow {
+  position: absolute;
+  left: calc(var(--copy-left, 17%) - 3%);
+  right: calc(var(--copy-right, 17%) - 3%);
+  top: calc(var(--copy-top, 23%) - 3%);
+  bottom: calc(var(--copy-bottom, 38.5%) - 2.5%);
+  pointer-events: none;
+  background: radial-gradient(ellipse 62% 56% at 50% 48%, rgba(247, 241, 232, 0.62), rgba(247, 241, 232, 0) 72%);
+}
+
+/* ---- Copy inside the arch ------------------------------------------- */
+
+.programme__copy {
+  position: absolute;
+  left: var(--copy-left, 17%);
+  right: var(--copy-right, 17%);
+  top: var(--copy-top, 23%);
+  bottom: var(--copy-bottom, 38.5%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--ink);
+}
+
+.programme__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.programme__kicker {
+  margin: 0 0 0.7cqh;
+  /* Tracking adds trailing space; matching left padding keeps it optically centred. */
+  padding-left: 0.3em;
+  font-family: var(--font-body);
+  font-size: max(0.62rem, 1.3cqh);
+  line-height: 1.5;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+
+/* The date is the day's headline. */
+.programme__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: min(4.6cqh, 9.6cqw);
+  /* Lining figures: Cormorant's default old-style "11" can read as "II". */
+  font-variant-numeric: lining-nums;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  text-shadow: 0 2px 18px rgba(247, 241, 232, 0.85);
+  text-wrap: balance;
+}
+
+.programme__divider {
+  width: min(78%, 24cqh);
+  margin: 1.3cqh 0 0.9cqh;
+  font-size: max(0.6rem, 1.15cqh);
+}
+
+.programme__events {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.programme__event {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.programme__connector {
+  display: block;
+  width: 1px;
+  height: 2cqh;
+  margin: 0.5cqh 0 0.55cqh;
+  background: linear-gradient(180deg, rgba(196, 161, 92, 0.15), var(--antique-gold) 45%, rgba(196, 161, 92, 0.6));
+  transform-origin: top center;
+}
+
+.programme__node {
+  display: block;
+  width: max(6px, 0.8cqh);
+  height: max(6px, 0.8cqh);
+  margin-bottom: 0.75cqh;
+  border: 1px solid var(--antique-gold);
+  background: rgba(247, 241, 232, 0.85);
+  transform: rotate(45deg);
+}
+
+.programme__event-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: min(2.7cqh, 5.4cqw);
+  line-height: 1.1;
+  color: var(--ink);
+  text-shadow: 0 2px 14px rgba(247, 241, 232, 0.85);
+}
+
+.programme__time {
+  margin: 0.4cqh 0 0;
+  padding-left: 0.2em;
+  font-family: var(--font-body);
+  font-size: max(0.74rem, 1.8cqh);
+  letter-spacing: 0.2em;
+  color: var(--rose-deep);
+}
+
+.programme__time time {
+  font-variant-numeric: lining-nums;
+}
+
+/* ---- Compact phones (short artwork panel) ---------------------------- */
+/* Same composition, slightly tighter tracking and title so the kicker stays on
+   one line and everything sits inside the artwork's open area. */
+
+@container (max-height: 700px) {
+  .programme__kicker {
+    padding-left: 0.22em;
+    letter-spacing: 0.22em;
+  }
+
+  .programme__title {
+    font-size: min(4.2cqh, 9.6cqw);
+  }
+
+  .programme__connector {
+    height: 1.8cqh;
+  }
+}
+
+/* ---- Short landscape screens (phones on their side, short windows) --- */
+/* The portrait arch becomes too small here, so the copy is set over the
+   softened artwork with the events in a single elegant row. */
+
+@media (orientation: landscape) and (max-height: 560px) {
+  .programme__panel {
+    left: 0;
+    width: 100%;
+    transform: none;
+  }
+
+  .programme__art {
+    display: none;
+  }
+
+  .programme__glow {
+    inset: 8% 12%;
+    background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(247, 241, 232, 0.7), rgba(247, 241, 232, 0) 75%);
+  }
+
+  .programme__copy {
+    inset: max(1rem, env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right))
+      max(1rem, env(safe-area-inset-bottom)) max(1.5rem, env(safe-area-inset-left));
+  }
+
+  .programme__kicker {
+    margin-bottom: 0.4rem;
+    font-size: 0.64rem;
+  }
+
+  .programme__title {
+    font-size: clamp(1.8rem, 10vh, 2.7rem);
+  }
+
+  .programme__divider {
+    width: min(16rem, 40vw);
+    margin: 0.8rem 0 1rem;
+    font-size: 0.62rem;
+  }
+
+  .programme__events {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: clamp(1rem, 4vw, 3rem);
+    max-width: 100%;
+  }
+
+  .programme__event {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .programme__connector {
+    display: none;
+  }
+
+  .programme__node {
+    width: 6px;
+    height: 6px;
+    margin-bottom: 0.55rem;
+  }
+
+  .programme__event-title {
+    font-size: clamp(1.1rem, 5.6vh, 1.5rem);
+  }
+
+  .programme__time {
+    margin-top: 0.3rem;
+    font-size: 0.78rem;
+  }
+}

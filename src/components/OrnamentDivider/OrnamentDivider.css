@@ -1,0 +1,32 @@
+.ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45em;
+  width: 100%;
+  color: var(--antique-gold);
+}
+
+.ornament__rule {
+  flex: 1 1 0;
+  height: 1px;
+}
+
+.ornament__rule--left {
+  background: linear-gradient(90deg, transparent, currentColor);
+  transform-origin: right center;
+}
+
+.ornament__rule--right {
+  background: linear-gradient(90deg, currentColor, transparent);
+  transform-origin: left center;
+}
+
+.ornament__gem {
+  flex: none;
+  width: 2.6em;
+  height: auto;
+  overflow: visible;
+  fill: currentColor;
+  stroke: currentColor;
+}
