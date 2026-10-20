@@ -7,7 +7,6 @@ const played = new Set<string>();
 const inflight = new Map<string, Promise<void>>();
 
 let currentBeat: string | null = null;
-let skipHold = false;
 let holdDepth = 0;
 let listening = false;
 
@@ -29,10 +28,6 @@ function ensureListeners() {
   window.addEventListener("wheel", blockScroll, { passive: false });
   window.addEventListener("touchmove", blockScroll, { passive: false });
   window.addEventListener("keydown", blockKeys);
-}
-
-export function setSkipScrollHold(value: boolean) {
-  skipHold = value;
 }
 
 export function holdScroll() {

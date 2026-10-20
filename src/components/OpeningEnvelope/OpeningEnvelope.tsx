@@ -63,7 +63,7 @@ export function OpeningEnvelope({ reducedMotion, onReveal, onDone, onPlay }: Ope
   const callbacks = useRef({ onReveal, onDone, onPlay });
   callbacks.current = { onReveal, onDone, onPlay };
 
-  const { card, seal, coupleNames, wedding } = invitation;
+  const { card, seal, coupleNames } = invitation;
 
   // Resting state + gentle entrance. Runs before paint, so nothing flashes.
   useLayoutEffect(() => {
