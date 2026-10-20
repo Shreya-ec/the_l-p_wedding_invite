@@ -50,16 +50,16 @@
   align-items: center;
   width: min(100%, 44rem);
   max-height: 100%;
-  /* Centred in the frame when it fits; the card scrolls when it doesn't. */
+  /* Centred in the frame when it fits. */
   margin: auto 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: none;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  pointer-events: auto;
+  /* Do not become a nested scroller: overflow:auto on iOS swallows swipes even
+     when the card fits, so the page cannot leave Venue for RSVP. */
+  overflow: visible;
   text-align: center;
+}
+
+.venue__inner a {
+  pointer-events: auto;
 }
 
 .venue__inner::-webkit-scrollbar {

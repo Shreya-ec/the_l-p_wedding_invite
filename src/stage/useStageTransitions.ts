@@ -57,14 +57,14 @@ export function useStageTransitions({ stage, enabled, reducedMotion, onSceneChan
           trigger: stageEl,
           start: "top top",
           end: "bottom bottom",
-          scrub: reducedMotion ? 0.2 : 0.65,
+          scrub: reducedMotion ? 0.12 : 0.28,
           invalidateOnRefresh: true,
-          // After a flick, ease to the next resting section (title, names, countdown, days, venue, RSVP).
+          // Settle on the next section after a flick, without pulling the finger back.
           snap: {
             snapTo: stageSnapProgresses(),
-            duration: reducedMotion ? 0.15 : { min: 0.35, max: 0.8 },
-            delay: reducedMotion ? 0 : 0.08,
-            ease: "power2.inOut",
+            duration: reducedMotion ? 0.12 : { min: 0.18, max: 0.38 },
+            delay: 0,
+            ease: "power1.out",
             directional: true,
           },
           onUpdate: (self) => {

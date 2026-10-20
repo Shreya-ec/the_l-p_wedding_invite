@@ -197,7 +197,7 @@ export function useSceneScroll({ root, stage, enabled, reducedMotion }: Args) {
           trigger: stageEl,
           start: stagePosition(stageEl, segment.start),
           end: stagePosition(stageEl, segment.start + segment.length),
-          scrub: reducedMotion ? 0.2 : 0.65,
+          scrub: reducedMotion ? 0.12 : 0.28,
           invalidateOnRefresh: true,
         },
       });

@@ -13,7 +13,7 @@ type Args = {
 
 /**
  * Programme-day choreography: once the day has snapped into place, the heading
- * and then each event play in sequence. Scroll stays locked until they finish.
+ * and then each event play in sequence. Scroll stays free so the page never sticks.
  */
 export function useProgrammeScroll({ root, stage, sceneId, enabled, reducedMotion }: Args) {
   useLayoutEffect(() => {

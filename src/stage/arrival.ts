@@ -75,13 +75,8 @@ export async function arriveAt(id: string) {
 
   const first = !played.has(id);
   const run = (async () => {
-    if (first && !skipHold) holdScroll();
-    try {
-      await handler({ first });
-      played.add(id);
-    } finally {
-      if (first && !skipHold) releaseScroll();
-    }
+    await handler({ first });
+    played.add(id);
   })();
 
   inflight.set(id, run);

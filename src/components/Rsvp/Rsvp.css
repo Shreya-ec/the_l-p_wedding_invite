@@ -45,14 +45,13 @@
   width: min(100%, 36rem);
   max-height: 100%;
   margin: auto 0;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior: none;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  pointer-events: auto;
+  overflow: visible;
   text-align: center;
+}
+
+.rsvp__inner a,
+.rsvp__inner button {
+  pointer-events: auto;
 }
 
 .rsvp__inner::-webkit-scrollbar {
