@@ -282,7 +282,6 @@
   object-fit: cover;
   /* Keep the venue's pin near the centre of the frame at every shape. */
   object-position: 48% 44%;
-  filter: saturate(0.88) sepia(0.06);
 }
 
 /* The only thing over the map: a gently breathing call to open it. */

@@ -257,12 +257,11 @@ export const invitation: InvitationConfig = {
         id: "dec-12",
         date: "12 December",
         kicker: "The Celebrations Continue",
-        // Haldi artwork (736×1104): the open space between the marigold garlands,
-        // the leaf sprigs at either side, and the turmeric and flowers below.
+        // 12 December artwork (576×945): open floral sky above the couple and domes.
         background: "/images/haldi.jpg",
         surround: "/images/haldi-soft.jpg",
-        artAspect: 736 / 1104,
-        copyArea: { top: 24, right: 21, bottom: 37, left: 21 },
+        artAspect: 576 / 945,
+        copyArea: { top: 7, right: 11, bottom: 51, left: 11 },
         events: [
           { id: "haldi", label: "Haldi Ceremony", time: "10:00 AM", dateTime: "10:00" },
           { id: "sehra-bandi", label: "Sehra Bandi", time: "8:00 PM", dateTime: "20:00" },

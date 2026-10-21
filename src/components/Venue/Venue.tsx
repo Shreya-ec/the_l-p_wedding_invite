@@ -78,8 +78,7 @@ export function Venue({ active, reducedMotion, stage }: VenueProps) {
           rel="noopener noreferrer"
         >
           <svg className="venue__directions-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-            <path d="M8 1.6c-2.4 0-4.3 1.9-4.3 4.2 0 3.1 4.3 7.6 4.3 7.6s4.3-4.5 4.3-7.6c0-2.3-1.9-4.2-4.3-4.2Z" />
-            <circle cx="8" cy="5.9" r="1.45" />
+            <path d="M8 14.2S2.4 9.9 2.4 6.4C2.4 4.3 4 2.9 6 2.9c1.1 0 2 .6 2 1.9 0-1.3.9-1.9 2-1.9 2 0 3.6 1.4 3.6 3.5C13.6 9.9 8 14.2 8 14.2Z" />
           </svg>
           Get Directions
           <span className="sr-only"> to {name} (opens Google Maps in a new tab)</span>

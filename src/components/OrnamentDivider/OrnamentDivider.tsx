@@ -19,11 +19,9 @@ export function OrnamentDivider({ className = "", gem = "diamond" }: OrnamentDiv
         <svg className="ornament__gem" viewBox="0 0 40 20" focusable="false">
           <circle cx="4" cy="11" r="1.3" />
           <path
-            d="M20 2.2c-3.4 0-6 2.6-6 5.9 0 4.3 6 10.4 6 10.4s6-6.1 6-10.4c0-3.3-2.6-5.9-6-5.9Z"
-            fill="none"
+            d="M20 16.6C20 16.6 12.4 11.4 12.4 7.6c0-2.2 1.7-3.6 3.7-3.6 1.3 0 2.4.7 3.9 2.3 1.5-1.6 2.6-2.3 3.9-2.3 2 0 3.7 1.4 3.7 3.6 0 3.8-7.6 9-7.6 9Z"
             strokeWidth="1"
           />
-          <circle cx="20" cy="8.1" r="2" />
           <circle cx="36" cy="11" r="1.3" />
         </svg>
       ) : gem === "paw" ? (
