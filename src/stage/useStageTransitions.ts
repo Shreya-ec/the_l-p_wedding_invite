@@ -103,6 +103,25 @@ export function useStageTransitions({
           }
         });
 
+        // If active in cinema, strictly ensure correct sub-view is visible and active
+        if (toLayer === cinemaEl) {
+          if (to === 0) {
+            if (bgTwo) gsap.set(bgTwo, { opacity: 0 });
+            if (copyTwo) {
+              gsap.set(copyTwo, { opacity: 0, autoAlpha: 0, pointerEvents: "none" });
+              copyTwo.classList.remove("is-interactive");
+            }
+            if (names) gsap.set(names, { opacity: 1, pointerEvents: "auto" });
+          } else if (to === 1) {
+            if (names) gsap.set(names, { opacity: 0, pointerEvents: "none" });
+            if (bgTwo) gsap.set(bgTwo, { opacity: 1 });
+            if (copyTwo) {
+              gsap.set(copyTwo, { opacity: 1, autoAlpha: 1, pointerEvents: "auto" });
+              copyTwo.classList.add("is-interactive");
+            }
+          }
+        }
+
         // Inform arrival triggers
         const targetStepObj = STAGE_STEPS[to];
         notifyScene?.(targetStepObj.sceneId);
@@ -126,16 +145,16 @@ export function useStageTransitions({
           tl.to(bgTwo, { opacity: 1, duration: duration * 0.8, ease: "power2.inOut" }, 0);
         }
         if (copyTwo) {
-          tl.fromTo(copyTwo, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration, ease }, duration * 0.15);
-          tl.set(copyTwo, { pointerEvents: "auto" });
           copyTwo.classList.add("is-interactive");
+          tl.set(copyTwo, { pointerEvents: "auto" }, 0);
+          tl.fromTo(copyTwo, { opacity: 0, autoAlpha: 0, y: 12 }, { opacity: 1, autoAlpha: 1, y: 0, duration, ease }, duration * 0.15);
         }
       }
       // Leaving step 1 (Countdown) -> Entering step 0 (Bride & Groom)
       else if (from === 1 && to === 0) {
         if (copyTwo) {
           copyTwo.classList.remove("is-interactive");
-          tl.to(copyTwo, { opacity: 0, y: 12, duration: duration * 0.7, ease: "power2.inOut" }, 0);
+          tl.to(copyTwo, { opacity: 0, autoAlpha: 0, y: 12, duration: duration * 0.7, ease: "power2.inOut" }, 0);
           tl.set(copyTwo, { pointerEvents: "none" });
         }
         if (bgTwo) {

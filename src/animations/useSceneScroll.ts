@@ -76,37 +76,14 @@ export function useSceneScroll({ root, enabled, reducedMotion }: Args) {
       // Play petals on initial hero load
       playPetalBurst();
 
-      // Second chapter: Countdown & Scratch Card sequence
-      const q = gsap.utils.selector(root.current!);
-      const reveal = gsap.timeline({ paused: true, defaults: { ease: "power2.out" } });
-      if (!reducedMotion) {
-        reveal
-          .fromTo(
-            q(".scene-copy--two .scene-title"),
-            { opacity: 0, scale: 0.985, filter: "blur(4px)" },
-            { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.55 },
-            0,
-          )
-          .fromTo(
-            q(".scene-two__divider .ornament__rule"),
-            { opacity: 0, scaleX: 0 },
-            { opacity: 1, scaleX: 1, duration: 0.45, ease: "power2.inOut" },
-            0.18,
-          )
-          .fromTo(q(".scene-two__divider .ornament__gem"), { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.32)
-          .fromTo(q(".scene-two__scratch"), { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.45 }, 0.28)
-          .fromTo(q(".scene-two__countdown-panel"), { opacity: 0 }, { opacity: 1, duration: 0.5 }, 0.42)
-          .fromTo(
-            q(".scene-two__countdown .countdown__unit, .scene-two__countdown .countdown__message"),
-            { opacity: 0, filter: "blur(4px)" },
-            { opacity: 1, filter: "blur(0px)", duration: 0.4, stagger: 0.06 },
-            0.5,
-          )
-          .set(q(".scene-copy--two .scene-title, .scene-two__countdown .countdown__unit"), {
-            clearProps: "filter",
-          });
-      }
-      let revealed = reducedMotion;
+      // Ensure all elements inside copyTwo (Countdown, Scratch Card, Heading) are clean, crisp, and visible
+      const copyTwoElements = copyTwo.querySelectorAll(
+        ".scene-title, .scene-two__lead, .scene-two__divider, .ornament__rule, .ornament__gem, .scene-two__scratch, .scene-two__countdown-panel, .countdown__unit, .countdown__glyph, .countdown__message",
+      );
+      gsap.set(copyTwoElements, {
+        opacity: 1,
+        clearProps: "filter,clipPath",
+      });
 
       // Event listener for re-visiting the couple hero chapter
       const unsubCouple = onArrival("couple", () => {
@@ -115,18 +92,14 @@ export function useSceneScroll({ root, enabled, reducedMotion }: Args) {
 
       // Event listener for arriving at the countdown chapter
       const unsubCountdown = onArrival("countdown", () => {
-        if (!revealed) {
-          revealed = true;
-          reveal.play();
-        } else {
-          reveal.progress(1);
-        }
+        copyTwo.classList.add("is-interactive");
+        // Dispatch window resize so ScratchCard foil canvas paints perfectly
+        window.dispatchEvent(new Event("resize"));
       });
 
       return () => {
         unsubCouple();
         unsubCountdown();
-        reveal.kill();
       };
     }, root);
 

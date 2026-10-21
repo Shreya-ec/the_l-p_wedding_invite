@@ -2,7 +2,7 @@ import { stageSnapBeats } from "./stageLayout";
 
 export type ArrivalHandler = (ctx: { first: boolean }) => Promise<void> | void;
 
-const handlers = new Map<string, ArrivalHandler>();
+const handlers = new Map<string, Set<ArrivalHandler>>();
 const played = new Set<string>();
 const inflight = new Map<string, Promise<void>>();
 
@@ -53,10 +53,16 @@ export function noteProgress(progress: number) {
 }
 
 export function onArrival(id: string, handler: ArrivalHandler) {
-  handlers.set(id, handler);
+  let set = handlers.get(id);
+  if (!set) {
+    set = new Set();
+    handlers.set(id, set);
+  }
+  set.add(handler);
   if (currentBeat === id) void arriveAt(id);
   return () => {
-    if (handlers.get(id) === handler) handlers.delete(id);
+    set.delete(handler);
+    if (set.size === 0) handlers.delete(id);
   };
 }
 
@@ -65,12 +71,19 @@ export async function arriveAt(id: string) {
   const pending = inflight.get(id);
   if (pending) return pending;
 
-  const handler = handlers.get(id);
-  if (!handler) return;
+  const set = handlers.get(id);
+  if (!set || set.size === 0) return;
 
   const first = !played.has(id);
   const run = (async () => {
-    await handler({ first });
+    const list = Array.from(set);
+    for (const handler of list) {
+      try {
+        await handler({ first });
+      } catch (err) {
+        console.error("Arrival handler error:", err);
+      }
+    }
     played.add(id);
   })();
 
