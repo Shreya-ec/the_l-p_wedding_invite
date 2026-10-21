@@ -137,7 +137,7 @@
   cursor: pointer;
   /* Full width always; the height cap below must not narrow it. */
   width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 1024 / 659;
   /* Never taller than the frame can spare, so the scene fits the screen. */
   max-height: max(11rem, calc(100dvh - 27rem));
   overflow: hidden;
@@ -214,13 +214,13 @@
   }
 
   .venue__map-window {
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 1024 / 659;
   }
 }
 
 @media (max-width: 640px) {
   .venue__map-window {
-    aspect-ratio: 4 / 3.4;
+    aspect-ratio: 1024 / 659;
   }
 }
 
@@ -280,8 +280,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Keep the venue's pin near the centre of the frame at every shape. */
-  object-position: 48% 44%;
+  object-position: center;
 }
 
 /* The only thing over the map: a gently breathing call to open it. */
@@ -289,7 +288,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 12%;
+  bottom: 6%;
   width: max-content;
   min-height: 2.75rem;
   margin: 0 auto;
