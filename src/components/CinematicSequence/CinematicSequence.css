@@ -26,6 +26,8 @@
 
 .scene-bg--one {
   z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 .scene-bg--two {

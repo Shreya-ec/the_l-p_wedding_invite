@@ -18,7 +18,7 @@ export function SeamlessVideoBackground({
   src,
   poster,
   active = true,
-  crossfadeDuration = 1.2,
+  crossfadeDuration = 1.4,
   className = "",
 }: SeamlessVideoBackgroundProps) {
   const videoARef = useRef<HTMLVideoElement>(null);
@@ -77,8 +77,12 @@ export function SeamlessVideoBackground({
 
           primary.style.opacity = String(1 - blend);
           secondary.style.opacity = String(blend);
-        } else if (timeRemaining <= 0.06 || primary.ended) {
+        } else if (timeRemaining <= 0.08 || primary.ended) {
           // Primary finished its cycle: complete the handoff
+          if (!isCrossfading) {
+            secondary.currentTime = 0;
+            secondary.play().catch(() => {});
+          }
           primary.pause();
           primary.currentTime = 0;
           primary.style.opacity = "0";

@@ -7,6 +7,7 @@ import { OrnamentDivider } from "../OrnamentDivider/OrnamentDivider";
 import { ScratchCard } from "../ScratchCard/ScratchCard";
 import { SeamlessVideoBackground } from "./SeamlessVideoBackground";
 import countdownVideo from "../../assests/videos/gemini_generated_video_15ad4f22.mp4";
+import pavilionVideo from "../../assests/videos/gemini_generated_video_710ea71f.mp4";
 import "./CinematicSequence.css";
 
 /**
@@ -97,10 +98,15 @@ export function CinematicSequence({
       inert={!active}
     >
       <div className="cinema__viewport">
-        <div
-          className="scene-bg scene-bg--one"
-          style={{ backgroundImage: `url(${sceneOne.background})` }}
-        />
+        {/* Pages 1 & 2 (The P&L Wedding & Bride & Groom): Seamless looping video background */}
+        <div className="scene-bg scene-bg--one">
+          <SeamlessVideoBackground
+            src={pavilionVideo}
+            poster={sceneOne.background}
+            active={active}
+            crossfadeDuration={1.4}
+          />
+        </div>
         {/* Scene 2 (Countdown & Scratch): Seamless looping video background */}
         <div className="scene-bg scene-bg--two">
           <SeamlessVideoBackground
