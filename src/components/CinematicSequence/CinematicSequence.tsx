@@ -1,7 +1,6 @@
-import { useEffect, useRef, useState, type CSSProperties, type RefObject } from "react";
+import { useRef, useState, type CSSProperties, type RefObject } from "react";
 import { invitation } from "../../config/invitation";
 import { haptic } from "../../utils/haptic";
-import { onArrival } from "../../stage/arrival";
 import { useSceneScroll } from "../../animations/useSceneScroll";
 import { Countdown } from "../Countdown/Countdown";
 import { OrnamentDivider } from "../OrnamentDivider/OrnamentDivider";
@@ -54,49 +53,6 @@ function CopyableDates({ label, dateTime }: { label: string; dateTime: string })
   );
 }
 
-/** "scroll" fades in on the title scene, then leaves as soon as the guest advances. */
-function ScrollCue({ active, reducedMotion }: { active: boolean; reducedMotion: boolean }) {
-  const ref = useRef<HTMLParagraphElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!active || !el) return;
-
-    const show = window.setTimeout(() => {
-      el.classList.add("is-visible");
-    }, 2000);
-
-    const hide = () => {
-      window.clearTimeout(show);
-      el.classList.remove("is-visible");
-      el.classList.add("is-gone");
-    };
-
-    const unsub = onArrival("countdown", hide);
-    el.addEventListener("click", hide);
-
-    return () => {
-      window.clearTimeout(show);
-      unsub();
-      el.removeEventListener("click", hide);
-    };
-  }, [active]);
-
-  return (
-    <p className={`scroll-cue${reducedMotion ? " scroll-cue--reduced" : ""}`} ref={ref}>
-      <span className="scroll-cue__mark">
-        <span className="scroll-cue__rule" aria-hidden="true" />
-        <span className="scroll-cue__word">scroll</span>
-        <span className="scroll-cue__rule" aria-hidden="true" />
-      </span>
-      <svg className="scroll-cue__chevron" viewBox="0 0 24 16" aria-hidden="true">
-        <path d="M3 2.2 12 9.2 21 2.2" />
-        <path d="M3 7.2 12 14.2 21 7.2" />
-      </svg>
-    </p>
-  );
-}
-
 type CinematicSequenceProps = {
   active: boolean;
   /** The envelope has cleared, so the title scene is the screen in front of the guest. */
@@ -108,7 +64,7 @@ type CinematicSequenceProps = {
 
 export function CinematicSequence({
   active,
-  settled,
+  settled: _settled,
   reducedMotion,
   stage,
 }: CinematicSequenceProps) {
@@ -160,7 +116,6 @@ export function CinematicSequence({
           />
         )}
         <div className="cinema__veil" />
-        <ScrollCue active={settled} reducedMotion={reducedMotion} />
 
         {/* All of this scene's text: faded out by the stage as the next scene arrives. */}
         <div className="cinema__copy" data-stage-copy>

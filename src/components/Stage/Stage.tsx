@@ -18,7 +18,7 @@ type StageProps = {
 export function Stage({ stageRef, active, reducedMotion, onSceneChange, children }: StageProps) {
   const [activeStep, setActiveStep] = useState(0);
 
-  const { goToStep } = useStageTransitions({
+  const { goToStep, nextStep } = useStageTransitions({
     stage: stageRef,
     enabled: active,
     reducedMotion,
@@ -44,6 +44,30 @@ export function Stage({ stageRef, active, reducedMotion, onSceneChange, children
             />
           ))}
         </nav>
+
+        {/* Persistent gilded scroll cue on every page */}
+        <button
+          type="button"
+          className={`scroll-cue is-visible${reducedMotion ? " scroll-cue--reduced" : ""}`}
+          onClick={() => {
+            if (activeStep < STAGE_STEPS.length - 1) {
+              nextStep();
+            } else {
+              goToStep(0);
+            }
+          }}
+          aria-label={activeStep < STAGE_STEPS.length - 1 ? "Scroll to next page" : "Scroll to top"}
+        >
+          <span className="scroll-cue__mark">
+            <span className="scroll-cue__rule" aria-hidden="true" />
+            <span className="scroll-cue__word">scroll</span>
+            <span className="scroll-cue__rule" aria-hidden="true" />
+          </span>
+          <svg className="scroll-cue__chevron" viewBox="0 0 24 16" aria-hidden="true">
+            <path d="M3 2.2 12 9.2 21 2.2" />
+            <path d="M3 7.2 12 14.2 21 7.2" />
+          </svg>
+        </button>
       </div>
     </div>
   );
