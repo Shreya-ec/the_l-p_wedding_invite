@@ -19,9 +19,7 @@
   overscroll-behavior: none;
   touch-action: none;
   cursor: pointer;
-  background:
-    radial-gradient(ellipse 55% 50% at 50% 42%, rgba(230, 211, 163, 0.18), transparent 70%),
-    radial-gradient(ellipse 70% 80% at 50% 45%, var(--ivory), var(--paper) 60%, var(--ivory-deep));
+  background: #2a1412 url("/images/cover-table.jpg") center / cover no-repeat;
 }
 
 .opening__defs {
@@ -36,28 +34,54 @@
   height: 100%;
   width: min(100%, calc(100dvh * 0.5625));
   max-width: 100%;
-  overflow: hidden;
   container-type: size;
   perspective: 1600px;
   cursor: pointer;
   touch-action: none;
-  box-shadow: 0 30px 80px -30px rgba(62, 38, 42, 0.45);
+  overflow: visible;
   -webkit-tap-highlight-color: transparent;
 }
 
 /* ---- Envelope layers -------------------------------------------------- */
 
-.env__back,
-.env__pocket {
+.env__body {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
+  transform: translateY(-8%);
+}
+
+.env__shell {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-bottom-left-radius: 7cqw;
+  border-bottom-right-radius: 7cqw;
 }
 
 .env__back {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 36%;
+  bottom: 0;
   z-index: 1;
+  background: #3a1820;
+  border-bottom-left-radius: 7cqw;
+  border-bottom-right-radius: 7cqw;
+  pointer-events: none;
+  box-shadow:
+    0 26px 30px -8px rgba(24, 8, 12, 0.62),
+    22px 14px 26px -12px rgba(24, 8, 12, 0.5),
+    -22px 14px 26px -12px rgba(24, 8, 12, 0.5);
+}
+
+.env__pocket {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .env__flap {
@@ -107,13 +131,21 @@
   transform: rotateX(180deg);
 }
 
+.env__card-clip {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  clip-path: inset(0 0 12px 0);
+}
+
 .env__card {
   position: absolute;
   top: 24.2%;
   left: 5.5%;
   width: 89%;
   height: 60%;
-  z-index: 3;
   border-radius: 3px;
   background:
     radial-gradient(ellipse 70% 55% at 50% 28%, #fffdf8, transparent 62%),
@@ -237,11 +269,6 @@
   color: var(--ink-soft);
 }
 
-.env__pocket {
-  z-index: 4;
-  filter: drop-shadow(0 -4px 12px rgba(40, 20, 25, 0.3));
-}
-
 /* ---- Seal ---------------------------------------------------------- */
 
 .env__seal {
@@ -326,19 +353,23 @@
 .opening__skip {
   position: absolute;
   top: max(0.75rem, env(safe-area-inset-top));
-  right: max(3.7rem, calc(env(safe-area-inset-right) + 3rem));
-  z-index: 7;
-  min-height: 2.75rem;
-  min-width: 2.75rem;
-  padding: 0.55rem 0.75rem;
+  right: calc(max(0.75rem, env(safe-area-inset-right)) + 3.15rem);
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.75rem;
+  padding: 0 0.9rem;
   border: 0;
-  background: transparent;
-  color: rgba(247, 241, 232, 0.78);
+  border-radius: 999px;
+  background: rgba(60, 43, 46, 0.42);
+  color: var(--ivory);
   font-family: var(--font-body);
   font-size: 0.66rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   cursor: pointer;
+  backdrop-filter: blur(8px);
 }
 
 @keyframes envelope-sheen {

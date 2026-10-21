@@ -188,7 +188,7 @@ export const invitation: InvitationConfig = {
   card: {
     cover: "/images/envelope.jpg",
     liner: "/images/envelope.jpg",
-    prompt: "Open Invitation",
+    prompt: "Tap to Open",
     skipLabel: "Skip",
     names: "P & L",
     sealImage: "/images/seal.png",

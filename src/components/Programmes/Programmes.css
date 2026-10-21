@@ -115,7 +115,7 @@
 }
 
 .programme__kicker {
-  margin: 0 0 0.7cqh;
+  margin: 3.6cqh 0 0.7cqh;
   /* Tracking adds trailing space; matching left padding keeps it optically centred. */
   padding-left: 0.3em;
   font-family: var(--font-body);
@@ -250,6 +250,7 @@
   }
 
   .programme__kicker {
+    margin-top: 1.75rem;
     margin-bottom: 0.4rem;
     font-size: 0.64rem;
   }

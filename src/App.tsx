@@ -111,6 +111,9 @@ export default function App() {
     document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
     document.documentElement.classList.toggle("is-envelope", phase !== "open");
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", phase === "open" ? "#141013" : "#2a1412");
     return () => {
       document.documentElement.classList.remove("is-envelope");
     };

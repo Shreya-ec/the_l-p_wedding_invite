@@ -159,10 +159,11 @@ export function OpeningEnvelope({ reducedMotion, onReveal, onDone, onPlay }: Ope
     tl.add(() => {
       // Shadows and emboss filters would be re-rendered at every scale step; they are
       // fading out anyway, so drop them as the zoom begins to keep it smooth.
-      gsap.set(q(".env__card, .env__pocket, .env__card-flourish, .env__card-frame, .env__seal img"), {
+      gsap.set(q(".env__card, .env__pocket, .env__back, .env__card-flourish, .env__card-frame, .env__seal img"), {
         boxShadow: "none",
         filter: "none",
       });
+      gsap.set(q(".env__shell, .env__card-clip"), { overflow: "visible", clipPath: "none" });
       // Measured at this moment, so it fits any viewport or orientation.
       const r = cardEl.getBoundingClientRect();
       const scale = Math.max(window.innerWidth / r.width, window.innerHeight / r.height) * 1.04;
@@ -181,13 +182,13 @@ export function OpeningEnvelope({ reducedMotion, onReveal, onDone, onPlay }: Ope
     }, zoomAt)
       .to(q(".env__card-flourish, .env__card-frame"), { opacity: 0, duration: 0.25, ease: "power1.out" }, zoomAt)
       .to(q(".env__card-content"), { opacity: 0, duration: TIMING.zoomDuration * 0.5, ease: "power1.out" }, zoomAt)
-      .to(q(".env__pocket, .env__seal"), { yPercent: 22, duration: TIMING.zoomDuration * 0.6, ease: "power2.in" }, zoomAt)
+      .to(q(".env__pocket, .env__seal, .env__back"), { yPercent: 22, duration: TIMING.zoomDuration * 0.6, ease: "power2.in" }, zoomAt)
       .to(
-        q(".env__pocket, .env__seal"),
+        q(".env__pocket, .env__seal, .env__back"),
         { opacity: 0, duration: TIMING.zoomDuration * 0.4, ease: "power1.in" },
         zoomAt + 0.05,
       )
-      .to(q(".env__back, .env__flap"), { opacity: 0, duration: TIMING.zoomDuration * 0.7, ease: "power1.in" }, zoomAt + 0.1);
+      .to(q(".env__flap"), { opacity: 0, duration: TIMING.zoomDuration * 0.7, ease: "power1.in" }, zoomAt + 0.1);
 
     // 5. With the screen a still ivory field, the invitation starts its entrance beneath
     //    (its scroll setup happens here, unseen), then the card dissolves into it.
@@ -229,35 +230,22 @@ export function OpeningEnvelope({ reducedMotion, onReveal, onDone, onPlay }: Ope
           </defs>
         </svg>
 
-        {/* Back of the envelope, seen inside the open pocket. */}
-        <svg className="env__back" viewBox="0 0 720 1280" preserveAspectRatio="none" aria-hidden="true">
-          <defs>
-            <linearGradient id="envBack" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="var(--seal)" />
-              <stop offset="0.55" stopColor="var(--rose-deep)" />
-              <stop offset="1" stopColor="var(--seal-shadow)" />
-            </linearGradient>
-            <radialGradient id="envInner" cx="0.5" cy="0.42" r="0.6">
-              <stop offset="0" stopColor="#000" stopOpacity="0" />
-              <stop offset="1" stopColor="#000" stopOpacity="0.22" />
-            </radialGradient>
-          </defs>
-          <rect width="720" height="1280" fill="url(#envBack)" />
-          <rect width="720" height="1280" fill="url(#envInner)" />
-          <rect width="720" height="1280" filter="url(#envPaper)" opacity="0.45" style={{ mixBlendMode: "overlay" }} />
-        </svg>
+        <div className="env__body">
+        {/* Dark back, so the flap and pocket read as one envelope. */}
+        <div className="env__back" aria-hidden="true" />
+        <div className="env__shell">
 
         {/* Top flap: outer face while closed, inner face once folded open. */}
         <div className="env__flap" ref={flapRef} aria-hidden="true">
           <svg className="env__flap-face env__flap-face--outer" viewBox="0 0 720 290" preserveAspectRatio="none">
             <defs>
               <linearGradient id="envFlapOuter" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stopColor="var(--rose-deep)" />
-                <stop offset="0.55" stopColor="var(--seal)" />
-                <stop offset="1" stopColor="var(--seal-light)" />
+                <stop offset="0" stopColor="#642433" />
+                <stop offset="0.55" stopColor="#7a3140" />
+                <stop offset="1" stopColor="#682834" />
               </linearGradient>
-              <radialGradient id="envFlapLight" cx="0.5" cy="0.18" r="0.7">
-                <stop offset="0" stopColor="#fff" stopOpacity="0.16" />
+              <radialGradient id="envFlapLight" cx="0.5" cy="0.15" r="0.75">
+                <stop offset="0" stopColor="#fff" stopOpacity="0.07" />
                 <stop offset="1" stopColor="#fff" stopOpacity="0" />
               </radialGradient>
               <clipPath id="envFlapClip">
@@ -274,24 +262,18 @@ export function OpeningEnvelope({ reducedMotion, onReveal, onDone, onPlay }: Ope
               clipPath="url(#envFlapClip)"
               style={{ mixBlendMode: "overlay" }}
             />
-            <path
-              d="M18 8H702L392 268Q360 290 328 268Z"
-              fill="none"
-              stroke="rgba(230,211,163,0.42)"
-              strokeWidth="1.4"
-            />
-            <path d="M0 0L328 276Q360 300 392 276L720 0" fill="none" stroke="rgba(255,240,235,0.2)" strokeWidth="2" />
-            <g transform="translate(360 108)" fill="none" stroke="rgba(230,211,163,0.78)" strokeWidth="1.3">
-              <path d="M-42 0H-12" />
-              <path d="M12 0H42" />
-              <path d="M0 -9 8 0 0 9 -8 0Z" fill="rgba(230,211,163,0.55)" stroke="rgba(230,211,163,0.9)" />
+            <g transform="translate(360 46)" fill="none" stroke="#e2c78a" strokeWidth="1.35">
+              <path d="M-56 0H-14" />
+              <path d="M14 0H56" />
+              <path d="M0 -8 7 0 0 8 -7 0Z" fill="#e6c56e" stroke="#f0d9a0" />
+              <circle r="1.6" fill="#c45b6a" stroke="none" />
             </g>
           </svg>
           <svg className="env__flap-face env__flap-face--inner" viewBox="0 0 720 290" preserveAspectRatio="none">
             <defs>
               <linearGradient id="envFlapInner" x1="0" y1="1" x2="0" y2="0">
-                <stop offset="0" stopColor="var(--seal-shadow)" />
-                <stop offset="1" stopColor="var(--rose-deep)" />
+                <stop offset="0" stopColor="#4a1c28" />
+                <stop offset="1" stopColor="#642433" />
               </linearGradient>
               <clipPath id="envFlapInnerClip">
                 <path d="M0 290H720L392 14Q360 -10 328 14Z" />
@@ -304,6 +286,7 @@ export function OpeningEnvelope({ reducedMotion, onReveal, onDone, onPlay }: Ope
         </div>
 
         {/* The card that rises out of the envelope. */}
+        <div className="env__card-clip">
         <div className="env__card" ref={cardRef} aria-hidden="true">
           <div className="env__card-frame" />
           <CardFlourish className="env__card-flourish--left" />
@@ -322,21 +305,22 @@ export function OpeningEnvelope({ reducedMotion, onReveal, onDone, onPlay }: Ope
             </p>
           </div>
         </div>
+        </div>
 
         {/* Front pocket: two side panels under a bottom panel that rises to a soft point. */}
         <svg className="env__pocket" viewBox="0 0 720 1280" preserveAspectRatio="none" aria-hidden="true">
           <defs>
             <linearGradient id="envSide" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" stopColor="var(--seal-shadow)" />
-              <stop offset="1" stopColor="var(--rose-deep)" />
+              <stop offset="0" stopColor="#541e2c" />
+              <stop offset="1" stopColor="#6d2a38" />
             </linearGradient>
             <linearGradient id="envSideR" x1="1" y1="0" x2="0" y2="0">
-              <stop offset="0" stopColor="var(--seal-shadow)" />
-              <stop offset="1" stopColor="var(--rose-deep)" />
+              <stop offset="0" stopColor="#541e2c" />
+              <stop offset="1" stopColor="#6d2a38" />
             </linearGradient>
             <linearGradient id="envBottom" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="var(--seal)" />
-              <stop offset="1" stopColor="var(--rose-deep)" />
+              <stop offset="0" stopColor="#7a3140" />
+              <stop offset="1" stopColor="#642433" />
             </linearGradient>
             <clipPath id="envPocketClip">
               <path d="M0 590L318 872Q338 890 330 905L0 1280Z" />
@@ -349,22 +333,12 @@ export function OpeningEnvelope({ reducedMotion, onReveal, onDone, onPlay }: Ope
           <path
             d="M0 1135L326 884Q360 858 394 884L720 1135V1280H0Z"
             fill="url(#envBottom)"
-            stroke="rgba(255,240,235,0.14)"
-            strokeWidth="2"
-          />
-          <path d="M8 600L310 868" fill="none" stroke="rgba(230,211,163,0.22)" strokeWidth="1.2" />
-          <path d="M712 600L410 868" fill="none" stroke="rgba(230,211,163,0.22)" strokeWidth="1.2" />
-          <path
-            d="M24 1140L326 900Q360 876 394 900L696 1140"
-            fill="none"
-            stroke="rgba(230,211,163,0.28)"
-            strokeWidth="1.1"
           />
           <rect
             width="720"
             height="1280"
             filter="url(#envPaper)"
-            opacity="0.35"
+            opacity="0.28"
             clipPath="url(#envPocketClip)"
             style={{ mixBlendMode: "overlay" }}
           />
@@ -383,17 +357,6 @@ export function OpeningEnvelope({ reducedMotion, onReveal, onDone, onPlay }: Ope
           <img src={card.sealImage} alt="" /> 
         </button>
 
-        <button
-          type="button"
-          className="opening__skip"
-          onClick={(event) => {
-            event.stopPropagation();
-            skip();
-          }}
-        >
-          {card.skipLabel}
-        </button>
-
         <p className="opening__prompt">
           <button
             type="button"
@@ -405,7 +368,20 @@ export function OpeningEnvelope({ reducedMotion, onReveal, onDone, onPlay }: Ope
             {card.prompt}
           </button>
         </p>
+        </div>
+        </div>
       </div>
+
+      <button
+        type="button"
+        className="opening__skip"
+        onClick={(event) => {
+          event.stopPropagation();
+          skip();
+        }}
+      >
+        {card.skipLabel}
+      </button>
     </section>
   );
 }

@@ -173,9 +173,22 @@
   animation: none;
 }
 
-/* Bride & Groom: one bright pass when the page arrives, then the cue rests. */
+/* Bride & Groom: the word, rules, and arrow stay this cream. */
 .scroll-cue--emphasis {
+  color: #fffbb4;
   animation: scroll-cue-highlight 1.6s ease-out 1;
+}
+
+.scroll-cue--emphasis .scroll-cue__word {
+  color: #fffbb4;
+}
+
+.scroll-cue--emphasis .scroll-cue__rule {
+  background: linear-gradient(90deg, transparent, #fffbb4 42%, #fffbb4 58%, transparent);
+}
+
+.scroll-cue--emphasis .scroll-cue__chevron {
+  stroke: #fffbb4;
 }
 
 .scroll-cue--reduced.scroll-cue--emphasis {

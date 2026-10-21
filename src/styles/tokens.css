@@ -131,9 +131,11 @@ a {
 }
 
 html.is-envelope,
-html.is-envelope body {
+html.is-envelope body,
+html.is-envelope #root {
   overflow: hidden;
   overscroll-behavior: none;
+  background: #2a1412;
 }
 
 @media (prefers-reduced-motion: reduce) {
