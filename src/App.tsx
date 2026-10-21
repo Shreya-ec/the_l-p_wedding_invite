@@ -8,12 +8,18 @@ import { Venue } from "./components/Venue/Venue";
 import { Rsvp } from "./components/Rsvp/Rsvp";
 import { invitation } from "./config/invitation";
 import { usePrefersReducedMotion } from "./hooks/usePrefersReducedMotion";
+import {
+  destroySmoothScroll,
+  getLenis,
+  initSmoothScroll,
+  smoothScrollTo,
+} from "./utils/smoothScroll";
 
 type OpeningPhase = "closed" | "revealing" | "open";
 
 /** The invitation always opens on the first cinematic section, not a restored scroll. */
 function pinToFirstScene() {
-  window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  smoothScrollTo(0, { immediate: true });
 }
 
 export default function App() {
@@ -24,6 +30,26 @@ export default function App() {
   const stageRef = useRef<HTMLDivElement>(null);
   const songRef = useRef<HTMLAudioElement>(null);
   const [muted, setMuted] = useState(false);
+
+  // Initialize Lenis inertial smooth scrolling
+  useEffect(() => {
+    const lenis = initSmoothScroll();
+    lenis.stop();
+
+    let lastWidth = window.innerWidth;
+    const onResize = () => {
+      if (window.innerWidth !== lastWidth) {
+        lastWidth = window.innerWidth;
+        ScrollTrigger.refresh();
+      }
+    };
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+      destroySmoothScroll();
+    };
+  }, []);
 
   const playSong = () => {
     const audio = songRef.current;
@@ -55,21 +81,12 @@ export default function App() {
   }, [phase]);
 
   useEffect(() => {
-    const lockPage = phase !== "open";
-    document.documentElement.style.overflow = lockPage ? "hidden" : "";
-    document.body.style.overflow = lockPage ? "hidden" : "";
-    document.documentElement.classList.toggle("is-envelope", lockPage);
-    // Unlocking scroll can change the scrollbar width; re-measure scroll positions.
-    if (phase === "open") {
-      pinToFirstScene();
-      requestAnimationFrame(() => {
-        pinToFirstScene();
-        ScrollTrigger.refresh();
-      });
-    }
+    const lenis = getLenis();
+    lenis?.stop();
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    document.documentElement.classList.toggle("is-envelope", phase !== "open");
     return () => {
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
       document.documentElement.classList.remove("is-envelope");
     };
   }, [phase]);

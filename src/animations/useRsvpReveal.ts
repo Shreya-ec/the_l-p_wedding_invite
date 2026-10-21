@@ -1,10 +1,7 @@
 import { useLayoutEffect, type RefObject } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { onArrival, playToEnd } from "../stage/arrival";
 import { addDetailReveal, buildHeadingReveal } from "./reveals";
-import { sceneIndex, stageLayout, stagePosition } from "../stage/stageLayout";
-
-gsap.registerPlugin(ScrollTrigger);
 
 type Args = {
   root: RefObject<HTMLElement | null>;
@@ -14,20 +11,12 @@ type Args = {
 };
 
 /**
- * RSVP entrance, matching the venue: heading from the crossfade midpoint,
- * then the closing compliments as the scene completes. Plays once.
+ * RSVP entrance: heading, monogram, and compliments reveal smoothly on arrival.
  */
-export function useRsvpReveal({ root, stage, enabled, reducedMotion }: Args) {
+export function useRsvpReveal({ root, enabled, reducedMotion }: Args) {
   useLayoutEffect(() => {
     const el = root.current;
-    const stageEl = stage.current;
-    if (!enabled || !el || !stageEl || reducedMotion) return;
-
-    const index = sceneIndex("rsvp");
-    const arrival = stageLayout.transitions[index - 1];
-    const { segment } = stageLayout.scenes[index];
-    const headingAt = arrival ? arrival.start + arrival.length / 2 : segment.start;
-    const detailsAt = segment.start;
+    if (!enabled || !el || reducedMotion) return;
 
     const ctx = gsap.context(() => {
       const q = gsap.utils.selector(el);
@@ -42,28 +31,23 @@ export function useRsvpReveal({ root, stage, enabled, reducedMotion }: Args) {
       const detailsTl = gsap.timeline({ paused: true });
       addDetailReveal(detailsTl, q(".rsvp__closing"), 0, { y: 8, scale: 1, duration: 0.4 });
 
-      ScrollTrigger.create({
-        trigger: stageEl,
-        start: stagePosition(stageEl, headingAt),
-        once: true,
-        invalidateOnRefresh: true,
-        onEnter: () => headingTl.play(),
+      const unsub = onArrival("rsvp", async ({ first }) => {
+        if (!first) {
+          headingTl.progress(1);
+          detailsTl.progress(1);
+          return;
+        }
+        await playToEnd(headingTl);
+        await playToEnd(detailsTl);
       });
 
-      ScrollTrigger.create({
-        trigger: stageEl,
-        start: stagePosition(stageEl, detailsAt),
-        once: true,
-        invalidateOnRefresh: true,
-        onEnter: () => detailsTl.play(),
-      });
+      return () => {
+        unsub();
+        headingTl.kill();
+        detailsTl.kill();
+      };
     }, el);
 
-    const raf = requestAnimationFrame(() => ScrollTrigger.refresh());
-
-    return () => {
-      cancelAnimationFrame(raf);
-      ctx.revert();
-    };
-  }, [enabled, reducedMotion, root, stage]);
+    return () => ctx.revert();
+  }, [enabled, reducedMotion, root]);
 }

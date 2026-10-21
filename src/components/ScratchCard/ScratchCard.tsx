@@ -184,6 +184,7 @@ export function ScratchCard({
         <canvas
           ref={canvasRef}
           className="scratch__foil"
+          data-lenis-prevent
           role="button"
           tabIndex={revealed ? -1 : 0}
           aria-label={revealLabel}

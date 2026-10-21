@@ -1,5 +1,5 @@
-import type { ReactNode, RefObject } from "react";
-import { stageLayout } from "../../stage/stageLayout";
+import { useState, type ReactNode, type RefObject } from "react";
+import { STAGE_STEPS } from "../../stage/stageSteps";
 import { useStageTransitions } from "../../stage/useStageTransitions";
 import "./Stage.css";
 
@@ -12,21 +12,39 @@ type StageProps = {
 };
 
 /**
- * A fixed-viewport stage: every scene is a stacked full-screen layer inside a
- * sticky viewport, and a tall runway beneath it carries the page's natural
- * scroll. Scrolling advances the film (crossfades and reveals) while the
- * picture itself never slides.
+ * Fixed 100dvh full-bleed stage with 120fps one-stroke transitions.
+ * Features subtle, elegant gilded pagination dots on the right edge.
  */
 export function Stage({ stageRef, active, reducedMotion, onSceneChange, children }: StageProps) {
-  useStageTransitions({ stage: stageRef, enabled: active, reducedMotion, onSceneChange });
+  const [activeStep, setActiveStep] = useState(0);
+
+  const { goToStep } = useStageTransitions({
+    stage: stageRef,
+    enabled: active,
+    reducedMotion,
+    onSceneChange,
+    onStepChange: setActiveStep,
+  });
 
   return (
-    <div
-      ref={stageRef}
-      className="stage"
-      style={{ height: `calc(100vh + ${stageLayout.totalVh}vh)` }}
-    >
-      <div className="stage__viewport">{children}</div>
+    <div ref={stageRef} className="stage">
+      <div className="stage__viewport">
+        {children}
+
+        {/* Elegant gold pagination dots */}
+        <nav className="stage__nav" aria-label="Invitation chapters">
+          {STAGE_STEPS.map((step, idx) => (
+            <button
+              key={step.id}
+              type="button"
+              className={`stage__nav-dot ${activeStep === idx ? "is-active" : ""}`}
+              onClick={() => goToStep(idx)}
+              aria-label={`Go to ${step.label}`}
+              aria-current={activeStep === idx ? "step" : undefined}
+            />
+          ))}
+        </nav>
+      </div>
     </div>
   );
 }

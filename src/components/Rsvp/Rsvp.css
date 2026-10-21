@@ -21,7 +21,7 @@
 
 .rsvp__backdrop {
   position: absolute;
-  inset: 0;
+  inset: -4px 0;
   z-index: -2;
   background-size: cover;
   background-position: center 70%;

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type RefObject } from "react";
 import { invitation } from "../../config/invitation";
 import { haptic } from "../../utils/haptic";
+import { onArrival } from "../../stage/arrival";
 import { useSceneScroll } from "../../animations/useSceneScroll";
 import { Countdown } from "../Countdown/Countdown";
 import { OrnamentDivider } from "../OrnamentDivider/OrnamentDivider";
@@ -53,7 +54,7 @@ function CopyableDates({ label, dateTime }: { label: string; dateTime: string })
   );
 }
 
-/** "scroll" fades in on the title scene, then leaves as soon as the guest scrolls. */
+/** "scroll" fades in on the title scene, then leaves as soon as the guest advances. */
 function ScrollCue({ active, reducedMotion }: { active: boolean; reducedMotion: boolean }) {
   const ref = useRef<HTMLParagraphElement>(null);
 
@@ -66,16 +67,18 @@ function ScrollCue({ active, reducedMotion }: { active: boolean; reducedMotion: 
     }, 2000);
 
     const hide = () => {
-      if (window.scrollY <= 4) return;
       window.clearTimeout(show);
       el.classList.remove("is-visible");
       el.classList.add("is-gone");
     };
 
-    window.addEventListener("scroll", hide, { passive: true });
+    const unsub = onArrival("countdown", hide);
+    el.addEventListener("click", hide);
+
     return () => {
       window.clearTimeout(show);
-      window.removeEventListener("scroll", hide);
+      unsub();
+      el.removeEventListener("click", hide);
     };
   }, [active]);
 

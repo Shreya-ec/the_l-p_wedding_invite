@@ -21,33 +21,34 @@
   position: relative;
   isolation: isolate;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   height: 100dvh;
   overflow: hidden;
-  background: var(--paper);
+  background: #141013;
 }
 
 /* ---- Artwork layers ------------------------------------------------- */
 
 .programme__surround {
   position: absolute;
-  inset: -6%;
+  inset: -8px -6%;
   background-size: cover;
   background-position: center;
   filter: blur(22px) saturate(0.9);
-  transform: scale(1.04);
+  transform: scale(1.04) translate3d(0, 0, 0);
+  will-change: transform;
 }
 
 /* Pre-blurred artwork: the same look, without re-running a large blur filter while scrolling. */
 .programme__surround--soft {
-  inset: 0;
+  inset: -6px 0;
   filter: none;
   transform: none;
 }
 
 .programme__surround-veil {
   position: absolute;
-  inset: 0;
+  inset: -4px 0;
   background:
     linear-gradient(90deg, rgba(247, 241, 232, 0.42), rgba(247, 241, 232, 0.12) 34%,
       rgba(247, 241, 232, 0.12) 66%, rgba(247, 241, 232, 0.42));
@@ -55,11 +56,10 @@
 
 .programme__panel {
   position: absolute;
-  top: 0;
+  top: -3px;
   left: 50%;
-  height: 100%;
-  width: min(100%, calc(100vh * var(--art-aspect, 0.5625)));
-  width: min(100%, calc(100dvh * var(--art-aspect, 0.5625)));
+  height: calc(100% + 6px);
+  width: min(100%, calc((100dvh + 6px) * var(--art-aspect, 0.5625)));
   max-width: 100%;
   transform: translateX(-50%);
   container-type: size;
@@ -67,7 +67,7 @@
 
 .programme__art {
   position: absolute;
-  inset: 0;
+  inset: -3px 0;
   background-size: cover;
   background-position: center;
 }
