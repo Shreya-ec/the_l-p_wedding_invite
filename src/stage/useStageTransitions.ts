@@ -50,6 +50,11 @@ export function useStageTransitions({
     if (isTransitioningRef.current && !force) return;
 
     isTransitioningRef.current = true;
+    // Release the transition lock after 280ms so subsequent strokes are immediately responsive
+    window.setTimeout(() => {
+      isTransitioningRef.current = false;
+    }, 280);
+
     const from = currentStepRef.current;
     const to = targetStep;
     currentStepRef.current = to;
@@ -78,7 +83,7 @@ export function useStageTransitions({
 
     const fromLayer = layerMap[from];
     const toLayer = layerMap[to];
-    const duration = isReduced ? 0.22 : 0.52;
+    const duration = isReduced ? 0.2 : 0.4;
     const ease = "power2.out";
     const isForward = to > from;
 
@@ -114,14 +119,14 @@ export function useStageTransitions({
       // Leaving step 0 (Bride & Groom) -> Entering step 1 (Countdown)
       if (from === 0 && to === 1) {
         if (names) {
-          tl.to(names, { opacity: 0, y: -14, duration: duration * 0.7, ease: "power2.inOut" }, 0);
+          tl.to(names, { opacity: 0, y: -12, duration: duration * 0.7, ease: "power2.inOut" }, 0);
           tl.set(names, { pointerEvents: "none" });
         }
         if (bgTwo) {
           tl.to(bgTwo, { opacity: 1, duration: duration * 0.8, ease: "power2.inOut" }, 0);
         }
         if (copyTwo) {
-          tl.fromTo(copyTwo, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration, ease }, duration * 0.2);
+          tl.fromTo(copyTwo, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration, ease }, duration * 0.15);
           tl.set(copyTwo, { pointerEvents: "auto" });
           copyTwo.classList.add("is-interactive");
         }
@@ -130,14 +135,14 @@ export function useStageTransitions({
       else if (from === 1 && to === 0) {
         if (copyTwo) {
           copyTwo.classList.remove("is-interactive");
-          tl.to(copyTwo, { opacity: 0, y: 14, duration: duration * 0.7, ease: "power2.inOut" }, 0);
+          tl.to(copyTwo, { opacity: 0, y: 12, duration: duration * 0.7, ease: "power2.inOut" }, 0);
           tl.set(copyTwo, { pointerEvents: "none" });
         }
         if (bgTwo) {
           tl.to(bgTwo, { opacity: 0, duration: duration * 0.8, ease: "power2.inOut" }, 0);
         }
         if (names) {
-          tl.fromTo(names, { opacity: 0, y: -14 }, { opacity: 1, y: 0, duration, ease }, duration * 0.2);
+          tl.fromTo(names, { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration, ease }, duration * 0.15);
           tl.set(names, { pointerEvents: "auto" });
         }
       }
@@ -191,7 +196,7 @@ export function useStageTransitions({
             duration,
             ease,
           },
-          duration * 0.15,
+          duration * 0.1,
         );
       }
     }
@@ -246,10 +251,10 @@ export function useStageTransitions({
 
     void arriveAt("couple");
 
-    // Gesture detection: One-Stroke touch
+    // Gesture detection: One-Stroke touch with instant touchmove trigger
     let touchStartY = 0;
     let touchStartX = 0;
-    let touchStartTime = 0;
+    let strokeTriggered = false;
     let isTrackingTouch = false;
 
     const onTouchStart = (e: TouchEvent) => {
@@ -259,12 +264,13 @@ export function useStageTransitions({
         return;
       }
       isTrackingTouch = true;
+      strokeTriggered = false;
       touchStartY = e.touches[0].clientY;
       touchStartX = e.touches[0].clientX;
-      touchStartTime = Date.now();
     };
 
     const onTouchMove = (e: TouchEvent) => {
+      if (!isTrackingTouch) return;
       const target = e.target as HTMLElement | null;
       if (target?.closest(".scratch, canvas, [data-lenis-prevent], .scene-two__scratch")) {
         return;
@@ -272,21 +278,17 @@ export function useStageTransitions({
       if (e.cancelable) {
         e.preventDefault();
       }
-    };
 
-    const onTouchEnd = (e: TouchEvent) => {
-      if (!isTrackingTouch) return;
-      isTrackingTouch = false;
-      const touch = e.changedTouches[0];
+      if (strokeTriggered) return;
+
+      const touch = e.touches[0];
       if (!touch) return;
       const deltaY = touch.clientY - touchStartY;
       const deltaX = touch.clientX - touchStartX;
-      const duration = Date.now() - touchStartTime;
 
-      const isQuickFlick = duration < 350 && Math.abs(deltaY) > 22;
-      const isRegularSwipe = Math.abs(deltaY) > 35;
-
-      if ((isQuickFlick || isRegularSwipe) && Math.abs(deltaY) > Math.abs(deltaX) * 0.75) {
+      // Trigger IMMEDIATELY as soon as finger moves 20px vertically
+      if (Math.abs(deltaY) > 20 && Math.abs(deltaY) > Math.abs(deltaX) * 0.55) {
+        strokeTriggered = true;
         if (deltaY < 0) {
           nextStep();
         } else {
@@ -295,7 +297,28 @@ export function useStageTransitions({
       }
     };
 
-    // Wheel event (desktop) with 450ms debounce
+    const onTouchEnd = (e: TouchEvent) => {
+      if (!isTrackingTouch) return;
+      isTrackingTouch = false;
+      if (strokeTriggered) return;
+
+      const touch = e.changedTouches[0];
+      if (!touch) return;
+      const deltaY = touch.clientY - touchStartY;
+      const deltaX = touch.clientX - touchStartX;
+
+      // Sensitive fallback for fast tap-flicks
+      if (Math.abs(deltaY) > 14 && Math.abs(deltaY) > Math.abs(deltaX) * 0.55) {
+        strokeTriggered = true;
+        if (deltaY < 0) {
+          nextStep();
+        } else {
+          prevStep();
+        }
+      }
+    };
+
+    // Wheel event (desktop) with 280ms throttle
     let lastWheelTime = 0;
     const onWheel = (e: WheelEvent) => {
       const target = e.target as HTMLElement | null;
@@ -304,8 +327,8 @@ export function useStageTransitions({
       }
       e.preventDefault();
       const now = Date.now();
-      if (now - lastWheelTime < 450) return;
-      if (Math.abs(e.deltaY) < 18) return;
+      if (now - lastWheelTime < 280) return;
+      if (Math.abs(e.deltaY) < 12) return;
 
       lastWheelTime = now;
       if (e.deltaY > 0) {
