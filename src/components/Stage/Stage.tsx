@@ -6,6 +6,7 @@ import "./Stage.css";
 type StageProps = {
   stageRef: RefObject<HTMLDivElement | null>;
   active: boolean;
+  settled?: boolean;
   reducedMotion: boolean;
   onSceneChange?: (sceneId: string) => void;
   children: ReactNode;
@@ -15,12 +16,20 @@ type StageProps = {
  * Fixed 100dvh full-bleed stage with 120fps one-stroke transitions.
  * Features subtle, elegant gilded pagination dots on the right edge.
  */
-export function Stage({ stageRef, active, reducedMotion, onSceneChange, children }: StageProps) {
+export function Stage({
+  stageRef,
+  active,
+  settled = true,
+  reducedMotion,
+  onSceneChange,
+  children,
+}: StageProps) {
   const [activeStep, setActiveStep] = useState(0);
 
   const { goToStep, nextStep } = useStageTransitions({
     stage: stageRef,
     enabled: active,
+    settled,
     reducedMotion,
     onSceneChange,
     onStepChange: setActiveStep,

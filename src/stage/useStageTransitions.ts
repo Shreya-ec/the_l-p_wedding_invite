@@ -7,6 +7,7 @@ import { haptic } from "../utils/haptic";
 type Args = {
   stage: RefObject<HTMLElement | null>;
   enabled: boolean;
+  settled?: boolean;
   reducedMotion: boolean;
   onSceneChange?: (sceneId: string) => void;
   onStepChange?: (stepIndex: number) => void;
@@ -15,17 +16,19 @@ type Args = {
 /**
  * Master One-Stroke Chapter Controller.
  *
- * 6-Chapter Flow:
- * 0: Bride & Groom (Hero portrait, arch, names & petal burst)
- * 1: Countdown to Forever (Dusk gateway, scratch card & live timer)
- * 2: 11 December (Sagai, Mehndi, Dinner)
- * 3: 12 December (Haldi, Sehra Bandi, Dinner)
- * 4: Venue (Chopra Farms & Resorts, Google Maps)
- * 5: RSVP (Kriti & Ajinkya, Alex compliments)
+ * 7-Chapter Flow:
+ * 0: The P&L Wedding (Opening calligraphy script & garden pavilion)
+ * 1: Bride & Groom (Hero portrait, arch, names & petal burst)
+ * 2: Countdown to Forever (Dusk gateway, scratch card & live timer)
+ * 3: 11 December (Sagai, Mehndi, Dinner)
+ * 4: 12 December (Haldi, Sehra Bandi, Dinner)
+ * 5: Venue (Chopra Farms & Resorts, Google Maps)
+ * 6: RSVP (Kriti & Ajinkya, Alex compliments)
  */
 export function useStageTransitions({
   stage,
   enabled,
+  settled = true,
   reducedMotion,
   onSceneChange,
   onStepChange,
@@ -33,6 +36,15 @@ export function useStageTransitions({
   const [currentStep, setCurrentStep] = useState(0);
   const currentStepRef = useRef(0);
   const isTransitioningRef = useRef(false);
+  const autoTimerRef = useRef<number | null>(null);
+  const hasAutoAdvancedRef = useRef(false);
+
+  const clearAutoTimer = useCallback(() => {
+    if (autoTimerRef.current !== null) {
+      window.clearTimeout(autoTimerRef.current);
+      autoTimerRef.current = null;
+    }
+  }, []);
 
   // Store latest props in a ref for safe, zero-dependency callbacks
   const propsRef = useRef({ stage, enabled, reducedMotion, onSceneChange, onStepChange });
@@ -42,6 +54,9 @@ export function useStageTransitions({
 
   // Direct programmatic jump to any step
   const goToStep = useCallback((targetStep: number, force = false) => {
+    clearAutoTimer();
+    hasAutoAdvancedRef.current = true;
+
     const { stage: stageRef, enabled: isEnabled, reducedMotion: isReduced, onSceneChange: notifyScene, onStepChange: notifyStep } = propsRef.current;
     const stageEl = stageRef.current;
     if (!isEnabled || !stageEl) return;
@@ -68,22 +83,24 @@ export function useStageTransitions({
     const venueEl = stageEl.querySelector<HTMLElement>('[data-stage-scene="venue"]');
     const rsvpEl = stageEl.querySelector<HTMLElement>('[data-stage-scene="rsvp"]');
 
-    const bgTwo = cinemaEl?.querySelector<HTMLElement>(".scene-bg--two");
+    const titleOne = cinemaEl?.querySelector<HTMLElement>(".scene-copy--one");
     const names = cinemaEl?.querySelector<HTMLElement>(".scene-names");
+    const bgTwo = cinemaEl?.querySelector<HTMLElement>(".scene-bg--two");
     const copyTwo = cinemaEl?.querySelector<HTMLElement>(".scene-copy--two");
 
     const layerMap: Record<number, HTMLElement | null> = {
       0: cinemaEl,
       1: cinemaEl,
-      2: day11El,
-      3: day12El,
-      4: venueEl,
-      5: rsvpEl,
+      2: cinemaEl,
+      3: day11El,
+      4: day12El,
+      5: venueEl,
+      6: rsvpEl,
     };
 
     const fromLayer = layerMap[from];
     const toLayer = layerMap[to];
-    const duration = isReduced ? 0.2 : 0.4;
+    const duration = isReduced ? 0.2 : 0.45;
     const ease = "power2.out";
     const isForward = to > from;
 
@@ -111,8 +128,18 @@ export function useStageTransitions({
               gsap.set(copyTwo, { opacity: 0, autoAlpha: 0, pointerEvents: "none" });
               copyTwo.classList.remove("is-interactive");
             }
-            if (names) gsap.set(names, { opacity: 1, pointerEvents: "auto" });
+            if (names) gsap.set(names, { opacity: 0, pointerEvents: "none" });
+            if (titleOne) gsap.set(titleOne, { opacity: 1, pointerEvents: "auto" });
           } else if (to === 1) {
+            if (bgTwo) gsap.set(bgTwo, { opacity: 0 });
+            if (copyTwo) {
+              gsap.set(copyTwo, { opacity: 0, autoAlpha: 0, pointerEvents: "none" });
+              copyTwo.classList.remove("is-interactive");
+            }
+            if (titleOne) gsap.set(titleOne, { opacity: 0, pointerEvents: "none" });
+            if (names) gsap.set(names, { opacity: 1, pointerEvents: "auto" });
+          } else if (to === 2) {
+            if (titleOne) gsap.set(titleOne, { opacity: 0, pointerEvents: "none" });
             if (names) gsap.set(names, { opacity: 0, pointerEvents: "none" });
             if (bgTwo) gsap.set(bgTwo, { opacity: 1 });
             if (copyTwo) {
@@ -129,18 +156,38 @@ export function useStageTransitions({
       },
     });
 
-    // CASE 1: Moving within Cinema (0: Bride & Groom <-> 1: Countdown)
+    // CASE 1: Moving within Cinema (0: Title <-> 1: Bride & Groom <-> 2: Countdown)
     if (fromLayer === cinemaEl && toLayer === cinemaEl) {
       if (cinemaEl) {
         gsap.set(cinemaEl, { autoAlpha: 1, opacity: 1, pointerEvents: "auto" });
       }
 
-      // Leaving step 0 (Bride & Groom) -> Entering step 1 (Countdown)
-      if (from === 0 && to === 1) {
-        if (names) {
-          tl.to(names, { opacity: 0, y: -12, duration: duration * 0.7, ease: "power2.inOut" }, 0);
-          tl.set(names, { pointerEvents: "none" });
+      // Hide the departing cinema sub-view
+      if (from === 0 && titleOne) {
+        tl.to(titleOne, { opacity: 0, y: -12, duration: duration * 0.7, ease: "power2.inOut" }, 0);
+        tl.set(titleOne, { pointerEvents: "none" });
+      } else if (from === 1 && names) {
+        tl.to(names, { opacity: 0, y: to > from ? -12 : 12, duration: duration * 0.7, ease: "power2.inOut" }, 0);
+        tl.set(names, { pointerEvents: "none" });
+      } else if (from === 2) {
+        if (copyTwo) {
+          copyTwo.classList.remove("is-interactive");
+          tl.to(copyTwo, { opacity: 0, autoAlpha: 0, y: 12, duration: duration * 0.7, ease: "power2.inOut" }, 0);
+          tl.set(copyTwo, { pointerEvents: "none" });
         }
+        if (bgTwo) {
+          tl.to(bgTwo, { opacity: 0, duration: duration * 0.8, ease: "power2.inOut" }, 0);
+        }
+      }
+
+      // Reveal the arriving cinema sub-view
+      if (to === 0 && titleOne) {
+        tl.fromTo(titleOne, { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration, ease }, duration * 0.15);
+        tl.set(titleOne, { pointerEvents: "auto" });
+      } else if (to === 1 && names) {
+        tl.fromTo(names, { opacity: 0, y: to > from ? 12 : -12 }, { opacity: 1, y: 0, duration, ease }, duration * 0.15);
+        tl.set(names, { pointerEvents: "auto" });
+      } else if (to === 2) {
         if (bgTwo) {
           tl.to(bgTwo, { opacity: 1, duration: duration * 0.8, ease: "power2.inOut" }, 0);
         }
@@ -150,27 +197,13 @@ export function useStageTransitions({
           tl.fromTo(copyTwo, { opacity: 0, autoAlpha: 0, y: 12 }, { opacity: 1, autoAlpha: 1, y: 0, duration, ease }, duration * 0.15);
         }
       }
-      // Leaving step 1 (Countdown) -> Entering step 0 (Bride & Groom)
-      else if (from === 1 && to === 0) {
-        if (copyTwo) {
-          copyTwo.classList.remove("is-interactive");
-          tl.to(copyTwo, { opacity: 0, autoAlpha: 0, y: 12, duration: duration * 0.7, ease: "power2.inOut" }, 0);
-          tl.set(copyTwo, { pointerEvents: "none" });
-        }
-        if (bgTwo) {
-          tl.to(bgTwo, { opacity: 0, duration: duration * 0.8, ease: "power2.inOut" }, 0);
-        }
-        if (names) {
-          tl.fromTo(names, { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration, ease }, duration * 0.15);
-          tl.set(names, { pointerEvents: "auto" });
-        }
-      }
     } else {
       // CASE 2: Moving across full stage layers
       if (fromLayer) {
-        // When leaving cinema for celebration days, hide internal couple photo immediately so nothing ghosts through
+        // When leaving cinema for celebration days, hide internal couple photo and title immediately so nothing ghosts through
         if (fromLayer === cinemaEl) {
           if (names) gsap.set(names, { opacity: 0, pointerEvents: "none" });
+          if (titleOne) gsap.set(titleOne, { opacity: 0, pointerEvents: "none" });
         }
         tl.to(
           fromLayer,
@@ -192,8 +225,15 @@ export function useStageTransitions({
           if (to === 0) {
             if (bgTwo) gsap.set(bgTwo, { opacity: 0 });
             if (copyTwo) gsap.set(copyTwo, { opacity: 0, pointerEvents: "none" });
-            if (names) gsap.set(names, { opacity: 1, pointerEvents: "auto" });
+            if (names) gsap.set(names, { opacity: 0, pointerEvents: "none" });
+            if (titleOne) gsap.set(titleOne, { opacity: 1, pointerEvents: "auto" });
           } else if (to === 1) {
+            if (bgTwo) gsap.set(bgTwo, { opacity: 0 });
+            if (copyTwo) gsap.set(copyTwo, { opacity: 0, pointerEvents: "none" });
+            if (titleOne) gsap.set(titleOne, { opacity: 0, pointerEvents: "none" });
+            if (names) gsap.set(names, { opacity: 1, pointerEvents: "auto" });
+          } else if (to === 2) {
+            if (titleOne) gsap.set(titleOne, { opacity: 0, pointerEvents: "none" });
             if (names) gsap.set(names, { opacity: 0, pointerEvents: "none" });
             if (bgTwo) gsap.set(bgTwo, { opacity: 1 });
             if (copyTwo) {
@@ -221,7 +261,7 @@ export function useStageTransitions({
     }
 
     haptic(8);
-  }, []);
+  }, [clearAutoTimer]);
 
   const nextStep = useCallback(() => {
     if (currentStepRef.current < STAGE_STEPS.length - 1) {
@@ -235,12 +275,30 @@ export function useStageTransitions({
     }
   }, [goToStep]);
 
+  // 5-second automatic transition from Title (step 0) to Bride & Groom (step 1)
+  useEffect(() => {
+    if (!enabled || !settled) return;
+    if (currentStepRef.current !== 0 || hasAutoAdvancedRef.current) return;
+
+    clearAutoTimer();
+    autoTimerRef.current = window.setTimeout(() => {
+      if (currentStepRef.current === 0 && !hasAutoAdvancedRef.current) {
+        hasAutoAdvancedRef.current = true;
+        goToStep(1);
+      }
+    }, 5000);
+
+    return () => {
+      clearAutoTimer();
+    };
+  }, [enabled, settled, goToStep, clearAutoTimer]);
+
   // Set initial state and attach listeners
   useEffect(() => {
     const stageEl = stage.current;
     if (!enabled || !stageEl) return;
 
-    // Initialize layers: Step 0 (Bride & Groom) is active, all others hidden
+    // Initialize layers: Step 0 (Title: "The P&L Wedding") is active, all others hidden
     const cinemaEl = stageEl.querySelector<HTMLElement>('[data-stage-scene="cinema"]');
     const day11El = stageEl.querySelector<HTMLElement>('[data-stage-scene="day-dec-11"]');
     const day12El = stageEl.querySelector<HTMLElement>('[data-stage-scene="day-dec-12"]');
@@ -261,14 +319,14 @@ export function useStageTransitions({
       const copyTwo = cinemaEl.querySelector<HTMLElement>(".scene-copy--two");
       const titleOne = cinemaEl.querySelector<HTMLElement>(".scene-copy--one");
 
-      // Bride and Groom are active on step 0
-      if (names) gsap.set(names, { opacity: 1, pointerEvents: "auto" });
+      // Title screen is active on step 0
+      if (titleOne) gsap.set(titleOne, { opacity: 1, pointerEvents: "auto" });
+      if (names) gsap.set(names, { opacity: 0, pointerEvents: "none" });
       if (bgTwo) gsap.set(bgTwo, { opacity: 0 });
       if (copyTwo) gsap.set(copyTwo, { opacity: 0, pointerEvents: "none" });
-      if (titleOne) gsap.set(titleOne, { opacity: 0, pointerEvents: "none" });
     }
 
-    void arriveAt("couple");
+    void arriveAt("title");
 
     // Gesture detection: One-Stroke touch with instant touchmove trigger
     let touchStartY = 0;
@@ -277,6 +335,8 @@ export function useStageTransitions({
     let isTrackingTouch = false;
 
     const onTouchStart = (e: TouchEvent) => {
+      clearAutoTimer();
+      hasAutoAdvancedRef.current = true;
       if (e.touches.length !== 1) return;
       const target = e.target as HTMLElement | null;
       if (target?.closest(".scratch, canvas, [data-lenis-prevent], .scene-two__scratch")) {
@@ -340,6 +400,8 @@ export function useStageTransitions({
     // Wheel event (desktop) with 280ms throttle
     let lastWheelTime = 0;
     const onWheel = (e: WheelEvent) => {
+      clearAutoTimer();
+      hasAutoAdvancedRef.current = true;
       const target = e.target as HTMLElement | null;
       if (target?.closest(".scratch, canvas, [data-lenis-prevent], .scene-two__scratch")) {
         return;
@@ -359,6 +421,8 @@ export function useStageTransitions({
 
     // Keyboard navigation
     const onKeyDown = (e: KeyboardEvent) => {
+      clearAutoTimer();
+      hasAutoAdvancedRef.current = true;
       if (["ArrowDown", "PageDown", " "].includes(e.key)) {
         e.preventDefault();
         nextStep();
@@ -370,7 +434,11 @@ export function useStageTransitions({
 
     // Scroll-cue click / tap handler
     const cue = stageEl.querySelector<HTMLElement>(".scroll-cue");
-    const onCueClick = () => nextStep();
+    const onCueClick = () => {
+      clearAutoTimer();
+      hasAutoAdvancedRef.current = true;
+      nextStep();
+    };
     if (cue) {
       cue.style.cursor = "pointer";
       cue.style.pointerEvents = "auto";
@@ -384,6 +452,7 @@ export function useStageTransitions({
     window.addEventListener("keydown", onKeyDown);
 
     return () => {
+      clearAutoTimer();
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchmove", onTouchMove);
       window.removeEventListener("touchend", onTouchEnd);
@@ -391,7 +460,7 @@ export function useStageTransitions({
       window.removeEventListener("keydown", onKeyDown);
       if (cue) cue.removeEventListener("click", onCueClick);
     };
-  }, [enabled, nextStep, prevStep, stage]);
+  }, [clearAutoTimer, enabled, nextStep, prevStep, stage]);
 
   return {
     currentStep,

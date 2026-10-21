@@ -1,4 +1,5 @@
 export type StageStepId =
+  | "title"
   | "couple"
   | "countdown"
   | "day-dec-11"
@@ -13,6 +14,7 @@ export type StageStep = {
 };
 
 export const STAGE_STEPS: StageStep[] = [
+  { id: "title", sceneId: "cinema", label: "The P&L Wedding" },
   { id: "couple", sceneId: "cinema", label: "Bride & Groom" },
   { id: "countdown", sceneId: "cinema", label: "Countdown" },
   { id: "day-dec-11", sceneId: "day-dec-11", label: "11 December" },
@@ -20,3 +22,4 @@ export const STAGE_STEPS: StageStep[] = [
   { id: "venue", sceneId: "venue", label: "The Wedding Venue" },
   { id: "rsvp", sceneId: "rsvp", label: "RSVP" },
 ];
+

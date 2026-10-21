@@ -122,7 +122,12 @@ export default function App() {
         />
       ) : null}
       {/* One fixed-viewport stage: every scene crossfades into the next as the guest scrolls. */}
-      <Stage stageRef={stageRef} active={opened} reducedMotion={reducedMotion}>
+      <Stage
+        stageRef={stageRef}
+        active={opened}
+        settled={phase === "open"}
+        reducedMotion={reducedMotion}
+      >
         <CinematicSequence
           active={opened}
           settled={phase === "open"}

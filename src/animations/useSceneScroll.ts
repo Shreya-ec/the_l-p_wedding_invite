@@ -27,12 +27,12 @@ export function useSceneScroll({ root, enabled, reducedMotion }: Args) {
 
       if (!names || !bgTwo || !titleOne || !copyTwo || !bgOne) return;
 
-      // Hero Bride & Groom chapter: fully visible on load
+      // Initial state: Step 0 ("The P&L Wedding" title screen)
       gsap.set(bgOne, { opacity: 1, scale: 1 });
       gsap.set(bgTwo, { opacity: 0 });
-      gsap.set(titleOne, { opacity: 0, pointerEvents: "none" });
+      gsap.set(titleOne, { opacity: 1, pointerEvents: "auto" });
       gsap.set(copyTwo, { opacity: 0, pointerEvents: "none" });
-      gsap.set(names, { opacity: 1, pointerEvents: "auto" });
+      gsap.set(names, { opacity: 0, pointerEvents: "none" });
 
       const nameEls = names.querySelectorAll(".scene-names__name");
       const coupleImg = names.querySelector(".scene-names__couple");
@@ -72,9 +72,6 @@ export function useSceneScroll({ root, enabled, reducedMotion }: Args) {
             });
         });
       };
-
-      // Play petals on initial hero load
-      playPetalBurst();
 
       // Ensure all elements inside copyTwo (Countdown, Scratch Card, Heading) are clean, crisp, and visible
       const copyTwoElements = copyTwo.querySelectorAll(
