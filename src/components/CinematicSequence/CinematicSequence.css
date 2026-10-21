@@ -16,8 +16,6 @@
 .scene-bg {
   position: absolute;
   inset: -3px 0;
-  background-size: cover;
-  background-position: center;
   transform: scale(1.02);
   will-change: opacity, transform;
   backface-visibility: hidden;

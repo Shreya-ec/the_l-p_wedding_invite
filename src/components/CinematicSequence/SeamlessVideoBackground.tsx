@@ -3,9 +3,8 @@ import "./SeamlessVideoBackground.css";
 
 type SeamlessVideoBackgroundProps = {
   src: string;
-  poster?: string;
   active?: boolean;
-  crossfadeDuration?: number; // Duration of crossfade blend in seconds (default: 1.2s)
+  crossfadeDuration?: number; // Duration of crossfade blend in seconds (default: 1.4s)
   className?: string;
 };
 
@@ -16,7 +15,6 @@ type SeamlessVideoBackgroundProps = {
  */
 export function SeamlessVideoBackground({
   src,
-  poster,
   active = true,
   crossfadeDuration = 1.4,
   className = "",
@@ -129,7 +127,6 @@ export function SeamlessVideoBackground({
       <video
         ref={videoARef}
         src={src}
-        poster={poster}
         muted
         playsInline
         autoPlay
@@ -141,7 +138,6 @@ export function SeamlessVideoBackground({
       <video
         ref={videoBRef}
         src={src}
-        poster={poster}
         muted
         playsInline
         preload="auto"

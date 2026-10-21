@@ -102,7 +102,6 @@ export function CinematicSequence({
         <div className="scene-bg scene-bg--one">
           <SeamlessVideoBackground
             src={pavilionVideo}
-            poster={sceneOne.background}
             active={active}
             crossfadeDuration={1.4}
           />
@@ -111,11 +110,9 @@ export function CinematicSequence({
         <div className="scene-bg scene-bg--two">
           <SeamlessVideoBackground
             src={countdownVideo}
-            poster={sceneTwo.background}
             active={active}
-            crossfadeDuration={1.2}
+            crossfadeDuration={1.4}
           />
-          <div className="scene-frame__veil" />
         </div>
         <div className="cinema__veil" />
 
