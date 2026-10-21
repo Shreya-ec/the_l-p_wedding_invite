@@ -167,7 +167,7 @@ export function useStageTransitions({
         tl.to(titleOne, { opacity: 0, y: -12, duration: duration * 0.7, ease: "power2.inOut" }, 0);
         tl.set(titleOne, { pointerEvents: "none" });
       } else if (from === 1 && names) {
-        tl.to(names, { opacity: 0, y: to > from ? -12 : 12, duration: duration * 0.7, ease: "power2.inOut" }, 0);
+        tl.to(names, { opacity: 0, duration: duration * 0.7, ease: "power2.inOut" }, 0);
         tl.set(names, { pointerEvents: "none" });
       } else if (from === 2) {
         if (copyTwo) {
@@ -185,8 +185,10 @@ export function useStageTransitions({
         tl.fromTo(titleOne, { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration, ease }, duration * 0.15);
         tl.set(titleOne, { pointerEvents: "auto" });
       } else if (to === 1 && names) {
-        tl.fromTo(names, { opacity: 0, y: to > from ? 12 : -12 }, { opacity: 1, y: 0, duration, ease }, duration * 0.15);
-        tl.set(names, { pointerEvents: "auto" });
+        tl.set(names, { opacity: 1, y: 0, pointerEvents: "auto" }, duration * 0.1);
+        tl.add(() => {
+          void arriveAt("couple");
+        }, duration * 0.1);
       } else if (to === 2) {
         if (bgTwo) {
           tl.to(bgTwo, { opacity: 1, duration: duration * 0.8, ease: "power2.inOut" }, 0);
