@@ -65,6 +65,31 @@ export default function App() {
     void audio.play();
   };
 
+  const handleSongEnded = () => {
+    const audio = songRef.current;
+    if (!audio) return;
+    const startAt = invitation.song.startSeconds;
+    audio.currentTime = startAt;
+    audio.play().catch(() => {
+      audio.currentTime = 0;
+      void audio.play();
+    });
+  };
+
+  useEffect(() => {
+    const audio = songRef.current;
+    if (!audio) return;
+
+    const onEnded = () => {
+      handleSongEnded();
+    };
+
+    audio.addEventListener("ended", onEnded);
+    return () => {
+      audio.removeEventListener("ended", onEnded);
+    };
+  }, []);
+
   useEffect(() => {
     const audio = songRef.current;
     if (audio) audio.muted = muted;
@@ -93,7 +118,12 @@ export default function App() {
 
   return (
     <main>
-      <audio ref={songRef} src={invitation.song.src} preload="auto" />
+      <audio
+        ref={songRef}
+        src={invitation.song.src}
+        preload="auto"
+        onEnded={handleSongEnded}
+      />
       <button
         type="button"
         className="sound-toggle"
