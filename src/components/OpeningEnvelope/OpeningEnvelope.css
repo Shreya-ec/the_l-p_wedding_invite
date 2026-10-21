@@ -18,6 +18,7 @@
   overflow: hidden;
   overscroll-behavior: none;
   touch-action: none;
+  cursor: pointer;
   background:
     radial-gradient(ellipse 55% 50% at 50% 42%, rgba(230, 211, 163, 0.18), transparent 70%),
     radial-gradient(ellipse 70% 80% at 50% 45%, var(--ivory), var(--paper) 60%, var(--ivory-deep));

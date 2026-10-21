@@ -113,7 +113,7 @@ export type InvitationConfig = {
     invitationLine: string;
   };
   logo: string;
-  /** Plays when the guest taps the wax seal. */
+  /** Plays as soon as the guest opens the invitation. */
   song: {
     src: string;
     /** Playback begins here, in seconds. */

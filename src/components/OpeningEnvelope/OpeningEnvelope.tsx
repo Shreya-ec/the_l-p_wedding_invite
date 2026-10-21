@@ -11,7 +11,7 @@ type OpeningEnvelopeProps = {
   onReveal: () => void;
   /** The opening has fully faded out and can be removed. */
   onDone: () => void;
-  /** Starts the song. The wax seal and Skip both call this; the prompt does not. */
+  /** Starts the song as soon as the invitation opens. */
   onPlay: () => void;
 };
 
@@ -59,6 +59,7 @@ export function OpeningEnvelope({ reducedMotion, onReveal, onDone, onPlay }: Ope
   const flapRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const started = useRef(false);
+  const played = useRef(false);
   const timeline = useRef<gsap.core.Timeline | null>(null);
   const callbacks = useRef({ onReveal, onDone, onPlay });
   callbacks.current = { onReveal, onDone, onPlay };
@@ -95,9 +96,16 @@ export function OpeningEnvelope({ reducedMotion, onReveal, onDone, onPlay }: Ope
     timeline.current.to(rootRef.current, { opacity: 0, duration: fade, ease: "power1.inOut" });
   };
 
+  const startMusic = () => {
+    if (played.current) return;
+    played.current = true;
+    callbacks.current.onPlay();
+  };
+
   const open = () => {
     if (started.current) return;
     started.current = true;
+    startMusic();
     haptic(18);
 
     if (reducedMotion) {
@@ -193,15 +201,15 @@ export function OpeningEnvelope({ reducedMotion, onReveal, onDone, onPlay }: Ope
   };
 
   const skip = () => {
-    callbacks.current.onPlay();
+    startMusic();
     if (started.current && timeline.current?.progress() === 1) return;
     started.current = true;
     finish(reducedMotion ? TIMING.reducedFade : TIMING.skipFade);
   };
 
   return (
-    <section ref={rootRef} className="opening" aria-label="Closed wedding invitation">
-      <div className="opening__stage" ref={stageRef} onClick={open}>
+    <section ref={rootRef} className="opening" aria-label="Closed wedding invitation" onClick={open}>
+      <div className="opening__stage" ref={stageRef}>
         <svg className="opening__defs" aria-hidden="true">
           <defs>
             <filter id="envPaper" x="0" y="0" width="100%" height="100%">
@@ -367,7 +375,6 @@ export function OpeningEnvelope({ reducedMotion, onReveal, onDone, onPlay }: Ope
           className="env__seal"
           onClick={(event) => {
             event.stopPropagation();
-            callbacks.current.onPlay();
             open();
           }}
           aria-label={seal.ariaLabel}

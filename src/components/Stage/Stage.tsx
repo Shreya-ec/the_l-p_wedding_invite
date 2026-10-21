@@ -57,7 +57,7 @@ export function Stage({
         {/* Persistent gilded scroll cue on every page */}
         <button
           type="button"
-          className={`scroll-cue is-visible${reducedMotion ? " scroll-cue--reduced" : ""}`}
+          className={`scroll-cue is-visible${activeStep === 1 ? " scroll-cue--emphasis" : ""}${reducedMotion ? " scroll-cue--reduced" : ""}`}
           onClick={() => {
             if (activeStep < STAGE_STEPS.length - 1) {
               nextStep();

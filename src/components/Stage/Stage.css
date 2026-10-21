@@ -173,6 +173,27 @@
   animation: none;
 }
 
+/* Bride & Groom: one bright pass when the page arrives, then the cue rests. */
+.scroll-cue--emphasis {
+  animation: scroll-cue-highlight 1.6s ease-out 1;
+}
+
+.scroll-cue--reduced.scroll-cue--emphasis {
+  animation: none;
+}
+
+@keyframes scroll-cue-highlight {
+  0% {
+    filter: none;
+  }
+  35% {
+    filter: drop-shadow(0 0 8px rgba(230, 211, 163, 0.95)) brightness(1.35);
+  }
+  100% {
+    filter: none;
+  }
+}
+
 @keyframes scroll-cue-fall {
   0%,
   100% {

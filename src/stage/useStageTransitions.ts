@@ -277,7 +277,7 @@ export function useStageTransitions({
     }
   }, [goToStep]);
 
-  // 5-second automatic transition from Title (step 0) to Bride & Groom (step 1)
+  // 3-second automatic transition from Title (step 0) to Bride & Groom (step 1)
   useEffect(() => {
     if (!enabled || !settled) return;
     if (currentStepRef.current !== 0 || hasAutoAdvancedRef.current) return;
@@ -288,7 +288,7 @@ export function useStageTransitions({
         hasAutoAdvancedRef.current = true;
         goToStep(1);
       }
-    }, 5000);
+    }, 2500);
 
     return () => {
       clearAutoTimer();
