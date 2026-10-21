@@ -6,6 +6,8 @@ type Args = {
   root: RefObject<HTMLElement | null>;
   stage: RefObject<HTMLElement | null>;
   enabled: boolean;
+  /** The envelope has cleared, so the title image is the picture in front of the guest. */
+  settled: boolean;
   reducedMotion: boolean;
 };
 
@@ -14,7 +16,7 @@ type Args = {
  * The Bride & Groom portrait, arch, names, and petal burst are featured
  * as the opening hero chapter.
  */
-export function useSceneScroll({ root, enabled, reducedMotion }: Args) {
+export function useSceneScroll({ root, enabled, settled, reducedMotion }: Args) {
   useLayoutEffect(() => {
     if (!enabled || !root.current) return;
 
@@ -124,14 +126,8 @@ export function useSceneScroll({ root, enabled, reducedMotion }: Args) {
       namesReveal.pause(0);
       gsap.set(petals, { opacity: 0, x: 0, y: 0, scale: 0.3 });
 
-      // Title lettering soft blur-to-clear entrance
-      if (lettering && !reducedMotion) {
-        gsap.fromTo(
-          lettering,
-          { opacity: 0, filter: "blur(3px)" },
-          { opacity: 1, filter: "blur(0px)", duration: 0.75, ease: "power1.out", clearProps: "filter", delay: 0.1 },
-        );
-      }
+      // Held back until the envelope has cleared, then revealed by the entrance below.
+      if (lettering) gsap.set(lettering, { opacity: 0 });
 
       // Ensure all elements inside copyTwo (Countdown, Scratch Card, Heading) are clean, crisp, and visible
       const copyTwoElements = copyTwo.querySelectorAll(
@@ -176,4 +172,37 @@ export function useSceneScroll({ root, enabled, reducedMotion }: Args) {
 
     return () => ctx.revert();
   }, [enabled, reducedMotion, root]);
+
+  // The script image rises into place once the first section is actually on screen.
+  useLayoutEffect(() => {
+    if (!enabled || !settled || !root.current) return;
+    const lettering = root.current.querySelector(".scene-lettering");
+    if (!lettering) return;
+
+    if (reducedMotion) {
+      gsap.set(lettering, { opacity: 1, clearProps: "filter,transform" });
+      return;
+    }
+
+    const tween = gsap.fromTo(
+      lettering,
+      { opacity: 0, y: 26, scale: 0.94, filter: "blur(8px)" },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        filter: "blur(0px)",
+        duration: 1.15,
+        ease: "power3.out",
+        delay: 0.06,
+        onComplete: () => {
+          gsap.set(lettering, { clearProps: "filter,transform" });
+        },
+      },
+    );
+
+    return () => {
+      tween.kill();
+    };
+  }, [enabled, settled, reducedMotion, root]);
 }

@@ -67,7 +67,7 @@ type CinematicSequenceProps = {
 
 export function CinematicSequence({
   active,
-  settled: _settled,
+  settled,
   reducedMotion,
   stage,
 }: CinematicSequenceProps) {
@@ -85,6 +85,7 @@ export function CinematicSequence({
     root: rootRef,
     stage,
     enabled: active,
+    settled,
     reducedMotion,
   });
 
