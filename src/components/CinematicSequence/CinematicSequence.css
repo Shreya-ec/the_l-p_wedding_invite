@@ -31,6 +31,8 @@
 .scene-bg--two {
   z-index: 2;
   opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 /* Groups both scenes' text so the stage can fade it as one; above the couple. */
@@ -195,6 +197,8 @@
 .scene-frame__veil {
   position: absolute;
   inset: 0;
+  z-index: 2;
+  pointer-events: none;
   background: linear-gradient(
     180deg,
     rgba(26, 24, 46, 0.66) 0%,

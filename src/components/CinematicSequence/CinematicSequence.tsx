@@ -5,6 +5,8 @@ import { useSceneScroll } from "../../animations/useSceneScroll";
 import { Countdown } from "../Countdown/Countdown";
 import { OrnamentDivider } from "../OrnamentDivider/OrnamentDivider";
 import { ScratchCard } from "../ScratchCard/ScratchCard";
+import { SeamlessVideoBackground } from "./SeamlessVideoBackground";
+import countdownVideo from "../../assests/videos/gemini_generated_video_15ad4f22.mp4";
 import "./CinematicSequence.css";
 
 /**
@@ -99,22 +101,16 @@ export function CinematicSequence({
           className="scene-bg scene-bg--one"
           style={{ backgroundImage: `url(${sceneOne.background})` }}
         />
-        {framed ? (
-          // Portrait artwork shown whole, centred over a soft surround; fades in as one layer.
-          <div className="scene-bg scene-bg--two scene-bg--framed" style={frameStyle}>
-            <div
-              className="scene-frame__surround"
-              style={{ backgroundImage: `url(${sceneTwo.surround ?? sceneTwo.background})` }}
-            />
-            <div className="scene-frame__art" style={{ backgroundImage: `url(${sceneTwo.background})` }} />
-            <div className="scene-frame__veil" />
-          </div>
-        ) : (
-          <div
-            className="scene-bg scene-bg--two"
-            style={{ backgroundImage: `url(${sceneTwo.background})` }}
+        {/* Scene 2 (Countdown & Scratch): Seamless looping video background */}
+        <div className="scene-bg scene-bg--two">
+          <SeamlessVideoBackground
+            src={countdownVideo}
+            poster={sceneTwo.background}
+            active={active}
+            crossfadeDuration={1.2}
           />
-        )}
+          <div className="scene-frame__veil" />
+        </div>
         <div className="cinema__veil" />
 
         {/* All of this scene's text: faded out by the stage as the next scene arrives. */}
