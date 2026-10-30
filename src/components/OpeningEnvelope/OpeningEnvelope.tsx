@@ -49,7 +49,7 @@ function CardFlourish({ className }: { className: string }) {
       <path d="M98 18C104 10 114 8 118 12C112 18 104 20 98 18Z" className="leaf" />
       <path d="M18 100C10 104 8 114 12 118C18 112 20 104 18 100Z" className="leaf" />
       <path d="M46 40C44 30 50 22 58 20C58 30 54 36 46 40Z" className="leaf" />
-      <path d="M40 46C30 44 22 50 20 58C30 58 36 54 40 46Z" className="leaf" /> */}
+      <path d="M40 46C30 44 22 50 20 58C30 58 36 54 40 46Z" className="leaf" /> */}  
       <path className="gem" d="M14 6 20 12 14 18 8 12Z" />
     </svg>
   );
