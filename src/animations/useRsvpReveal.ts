@@ -11,7 +11,7 @@ type Args = {
 };
 
 /**
- * RSVP entrance: heading, monogram, and compliments reveal smoothly on arrival.
+ * RSVP entrance: heading and monogram reveal smoothly on arrival.
  */
 export function useRsvpReveal({ root, enabled, reducedMotion }: Args) {
   useLayoutEffect(() => {
@@ -28,35 +28,18 @@ export function useRsvpReveal({ root, enabled, reducedMotion }: Args) {
         gem: q(".rsvp__divider .ornament__gem"),
       });
       addDetailReveal(headingTl, q(".rsvp__monogram"), 0, { y: 8, scale: 0.97, duration: 0.45 });
-      const detailsTl = gsap.timeline({ paused: true });
-      addDetailReveal(detailsTl, q(".rsvp__closing"), 0, { y: 8, scale: 1, duration: 0.4 });
-
-      const paw = q(".rsvp__paw");
-      gsap.set(paw, { opacity: 0, scale: 1.55, y: -10, rotation: -14, transformOrigin: "50% 82%" });
-      const pawTl = gsap.timeline({ paused: true });
-      pawTl
-        .to({}, { duration: 0.15 })
-        .to(paw, { opacity: 1, scale: 0.88, y: 1, rotation: 3, duration: 0.2, ease: "power3.in" })
-        .to(paw, { scale: 1, y: 0, rotation: 0, duration: 0.28, ease: "back.out(2)" })
-        .set(paw, { clearProps: "opacity,transform,transformOrigin" });
 
       const unsub = onArrival("rsvp", async ({ first }) => {
         if (!first) {
           headingTl.progress(1);
-          detailsTl.progress(1);
-          pawTl.progress(1);
           return;
         }
         await playToEnd(headingTl);
-        await playToEnd(detailsTl);
-        await playToEnd(pawTl);
       });
 
       return () => {
         unsub();
         headingTl.kill();
-        detailsTl.kill();
-        pawTl.kill();
       };
     }, el);
 

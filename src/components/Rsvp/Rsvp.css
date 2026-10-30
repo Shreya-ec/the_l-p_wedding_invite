@@ -1,5 +1,5 @@
 /*
- * Closing RSVP card: small-caps RSVP, the hosts' names, then Alex's compliments.
+ * Closing RSVP card: small-caps RSVP and the hosts' names.
  */
 
 .rsvp {
@@ -102,71 +102,8 @@
   opacity: 0.92;
 }
 
-.rsvp__closing {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35rem 0.45rem;
-  margin: clamp(1.6rem, 5vh, 2.8rem) 0 0;
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(1.05rem, 2.8vw, 1.35rem);
-  letter-spacing: 0.02em;
-  color: var(--ink-soft);
-}
-
-.rsvp__alex {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-height: 2.75rem;
-  padding: 0 0.15rem;
-  border: 0;
-  background: transparent;
-  font: inherit;
-  font-style: italic;
-  font-weight: 600;
-  color: var(--ink);
-  cursor: pointer;
-}
-
-.rsvp__alex.is-waving .rsvp__paw {
-  animation: rsvp-wave 0.7s ease-in-out;
-}
-
-@keyframes rsvp-wave {
-  0%,
-  100% {
-    transform: rotate(0deg) scale(1);
-  }
-  30% {
-    transform: rotate(-22deg) scale(1.12);
-  }
-  60% {
-    transform: rotate(16deg) scale(1.08);
-  }
-}
-
-.rsvp__paw {
-  width: 1.15em;
-  height: 1.15em;
-  fill: var(--antique-gold);
-  transform-origin: 40% 80%;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .rsvp__alex.is-waving .rsvp__paw {
-    animation: none;
-  }
-}
-
 @media (orientation: landscape) and (max-height: 560px) {
   .rsvp__title {
     font-size: clamp(1.8rem, 9vh, 2.6rem);
-  }
-
-  .rsvp__closing {
-    margin-top: 1.25rem;
   }
 }

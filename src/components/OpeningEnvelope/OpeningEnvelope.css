@@ -188,45 +188,56 @@
   color: var(--gold-deep);
 }
 
-/* Embossed ivory scrolls in the corners, as on the reference card. */
+/* Richer corner scrolls: a double gold arc, leaves, and a pale diamond at the corner. */
 .env__card-flourish {
   position: absolute;
-  top: 4.2cqw;
-  width: 22cqw;
-  height: 22cqw;
+  top: 3.2cqw;
+  width: 28cqw;
+  height: 28cqw;
   fill: none;
-  stroke: #d9c7a4;
-  stroke-width: 2.2;
+  stroke: #c4a15c;
+  stroke-width: 2.6;
   stroke-linecap: round;
-  filter: drop-shadow(0.8px 0.8px 0 rgba(255, 255, 255, 0.9)) drop-shadow(-0.6px -0.6px 0.6px rgba(140, 110, 80, 0.35));
+  filter: drop-shadow(0.8px 0.8px 0 rgba(255, 255, 255, 0.95)) drop-shadow(0 1px 1px rgba(141, 107, 50, 0.35));
   pointer-events: none;
 }
 
+.env__card-flourish .arc--inner {
+  stroke: #f3e4c4;
+  stroke-width: 1.5;
+}
+
 .env__card-flourish .leaf {
-  fill: #d9c7a4;
+  fill: #c4a15c;
   stroke: none;
 }
 
+.env__card-flourish .gem {
+  fill: #f8efd8;
+  stroke: #c4a15c;
+  stroke-width: 1.4;
+}
+
 .env__card-flourish--left {
-  left: 4.2cqw;
+  left: 3.2cqw;
 }
 
 .env__card-flourish--right {
-  right: 4.2cqw;
+  right: 3.2cqw;
   transform: scaleX(-1);
 }
 
 .env__card-flourish--bottom-left {
   top: auto;
-  bottom: 4.2cqw;
-  left: 4.2cqw;
+  bottom: 3.2cqw;
+  left: 3.2cqw;
   transform: scaleY(-1);
 }
 
 .env__card-flourish--bottom-right {
   top: auto;
-  bottom: 4.2cqw;
-  right: 4.2cqw;
+  bottom: 3.2cqw;
+  right: 3.2cqw;
   transform: scale(-1);
 }
 

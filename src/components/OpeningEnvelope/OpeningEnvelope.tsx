@@ -42,13 +42,15 @@ const CARD_HIDDEN_Y = 82;
 function CardFlourish({ className }: { className: string }) {
   return (
     <svg className={`env__card-flourish ${className}`} viewBox="0 0 120 120" aria-hidden="true">
-      <path d="M6 112C6 52 52 6 112 6" />
-      <path d="M18 100C18 58 56 20 98 18C78 26 64 40 62 56C60 70 72 76 80 66C86 58 80 48 72 50" />
+      {/* <path className="arc" d="M8 112C8 46 46 8 112 8" />
+      <path className="arc arc--inner" d="M22 112C22 64 64 22 112 22" /> */}
+      {/* <path d="M18 100C18 58 56 20 98 18C78 26 64 40 62 56C60 70 72 76 80 66C86 58 80 48 72 50" />
       <path d="M30 92C34 72 46 60 60 56" />
       <path d="M98 18C104 10 114 8 118 12C112 18 104 20 98 18Z" className="leaf" />
       <path d="M18 100C10 104 8 114 12 118C18 112 20 104 18 100Z" className="leaf" />
       <path d="M46 40C44 30 50 22 58 20C58 30 54 36 46 40Z" className="leaf" />
-      <path d="M40 46C30 44 22 50 20 58C30 58 36 54 40 46Z" className="leaf" />
+      <path d="M40 46C30 44 22 50 20 58C30 58 36 54 40 46Z" className="leaf" /> */}
+      <path className="gem" d="M14 6 20 12 14 18 8 12Z" />
     </svg>
   );
 }

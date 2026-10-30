@@ -82,9 +82,6 @@ export type VenueConfig = {
 export type RsvpConfig = {
   heading: string;
   hosts: string;
-  /** Closing line of the invitation, with a paw beside the name. */
-  closing: string;
-  closingFrom: string;
   background: string;
 };
 
@@ -200,8 +197,8 @@ export const invitation: InvitationConfig = {
   },
   couplePhoto: "/images/couple.png",
   coupleNames: {
-    first: "Lakshay",
-    second: "Prerna",
+    first: "Prerna",
+    second: "Lakshay",
     invitationLine: "Together with their families, invite you to share their joy",
   },
   logo: "/images/lp-logo.png",
@@ -248,15 +245,15 @@ export const invitation: InvitationConfig = {
         id: "dec-11",
         date: "11 December",
         events: [
-          { id: "sagai", label: "Sagai & Ring Ceremony", time: "4:00 PM", dateTime: "16:00" },
-          { id: "mehndi", label: "Mehndi Ceremony", time: "6:00 PM", dateTime: "18:00" },
-          { id: "dinner", label: "Dinner", time: "8:00 PM", dateTime: "20:00" },
+          { id: "mehndi", label: "Mehndi Ceremony", time: "10:30 AM", dateTime: "10:30" },
+          { id: "sagai", label: "Ring Ceremony & Sagai", time: "4:00 PM", dateTime: "16:00" },
+          { id: "dinner", label: "Cocktail & Dinner", time: "8:00 PM", dateTime: "20:00" },
         ],
       },
       {
         id: "dec-12",
         date: "12 December",
-        kicker: "The Celebrations Continue",
+        kicker: "The Wedding Day",
         // 12 December artwork (576×945): open floral sky above the couple and domes.
         background: "/images/haldi.jpg",
         surround: "/images/haldi-soft.jpg",
@@ -264,8 +261,7 @@ export const invitation: InvitationConfig = {
         copyArea: { top: 7, right: 11, bottom: 51, left: 11 },
         events: [
           { id: "haldi", label: "Haldi Ceremony", time: "10:00 AM", dateTime: "10:00" },
-          { id: "sehra-bandi", label: "Sehra Bandi", time: "8:00 PM", dateTime: "20:00" },
-          { id: "dinner", label: "Dinner", time: "8:30 PM", dateTime: "20:30" },
+          { id: "dinner", label: "Dinner", time: "8:00 PM", dateTime: "20:00" },
         ],
       },
     ],
@@ -280,9 +276,7 @@ export const invitation: InvitationConfig = {
   },
   rsvp: {
     heading: "RSVP",
-    hosts: "Kriti & Ajinkya",
-    closing: "With best compliments from",
-    closingFrom: "Alex",
+    hosts: "Rathee Family",
     background: "/images/scene-1.jpg",
   },
   scenes: [

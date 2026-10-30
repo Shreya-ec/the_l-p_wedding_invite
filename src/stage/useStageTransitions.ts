@@ -23,7 +23,7 @@ type Args = {
  * 3: 11 December (Sagai, Mehndi, Dinner)
  * 4: 12 December (Haldi, Sehra Bandi, Dinner)
  * 5: Venue (Chopra Farms & Resorts, Google Maps)
- * 6: RSVP (Kriti & Ajinkya, Alex compliments)
+ * 6: RSVP (Kriti & Ajinkya)
  */
 export function useStageTransitions({
   stage,

@@ -10,23 +10,15 @@ import countdownVideo from "../../assests/videos/gemini_generated_video_15ad4f22
 import pavilionVideo from "../../assests/videos/gemini_generated_video_710ea71f.mp4";
 import "./CinematicSequence.css";
 
-/**
- * Petals for the couple's reveal: a fixed, hand-balanced spread (no randomness at
- * render time), fanning up and out from behind the couple, in rose and gold.
- */
-const PETALS = Array.from({ length: 28 }, (_, i) => {
-  const t = i / 27;
-  const angle = -170 + t * 160 + (i % 3) * 5; // degrees: a wide upward fan
-  const distance = 34 + ((i * 37) % 30); // % of the portrait's width
-  return {
-    angle,
-    distance,
-    size: 9 + ((i * 5) % 8),
-    tint: i % 4 === 0 ? "gold" : i % 3 === 0 ? "blush" : "rose",
-    spin: (i % 2 ? 1 : -1) * (120 + ((i * 53) % 160)),
-  };
-});
-
+/** Quiet gold sparks around the names card. Positions are fixed so nothing jumps between renders. */
+const ROYAL_SPARKS = [
+  { x: "6%", y: "22%", delay: "0s", size: 3 },
+  { x: "92%", y: "18%", delay: "0.8s", size: 2.5 },
+  { x: "12%", y: "72%", delay: "1.4s", size: 2 },
+  { x: "88%", y: "68%", delay: "0.4s", size: 3 },
+  { x: "4%", y: "46%", delay: "1.9s", size: 2 },
+  { x: "96%", y: "44%", delay: "1.1s", size: 2.5 },
+];
 
 function CopyableDates({ label, dateTime }: { label: string; dateTime: string }) {
   const [copied, setCopied] = useState(false);
@@ -132,39 +124,33 @@ export function CinematicSequence({
           ) : null}
         </div>
 
-        {/* Names & couple: same pavilion background as the title; the couple's photo appears only here. */}
+        {/* Names: monogram above a half-clear ivory arch. */}
         <div className="scene-names" aria-labelledby="scene-names-title">
-          <div className="scene-names__portrait">
-            <div className="scene-names__arch" aria-hidden="true" />
-            <img
-              className="scene-names__couple"
-              src={invitation.couplePhoto}
-              alt={`${invitation.coupleNames.first} and ${invitation.coupleNames.second}`}
-            />
-            <div className="scene-names__petals" aria-hidden="true">
-              {PETALS.map((petal, index) => (
-                <span
-                  key={index}
-                  className={`scene-names__petal scene-names__petal--${petal.tint}`}
-                  data-angle={petal.angle}
-                  data-distance={petal.distance}
-                  data-spin={petal.spin}
-                  style={{ width: petal.size, height: petal.size * 1.35 }}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="scene-names__text">
+          <span className="scene-names__glow" aria-hidden="true" />
+          <img className="scene-logo" src={invitation.logo} alt="LP monogram" />
+          <div className="scene-names__lockup">
+            <span className="scene-names__jewel scene-names__jewel--top" aria-hidden="true" />
+            <span className="scene-names__jewel scene-names__jewel--bottom" aria-hidden="true" />
+            {ROYAL_SPARKS.map((spark) => (
+              <span
+                key={`${spark.x}-${spark.y}`}
+                className="scene-names__spark"
+                style={{
+                  left: spark.x,
+                  top: spark.y,
+                  width: spark.size,
+                  height: spark.size,
+                  animationDelay: spark.delay,
+                }}
+                aria-hidden="true"
+              />
+            ))}
             <h2 id="scene-names-title" className="scene-names__title">
-            <img
-            className="scene-logo"
-            src={invitation.logo}
-            alt="LP monogram"
-          /> 
               <span className="scene-names__name">{invitation.coupleNames.first}</span>
               <span className="scene-names__amp">&amp;</span>
               <span className="scene-names__name">{invitation.coupleNames.second}</span>
             </h2>
+            <OrnamentDivider className="scene-names__ornament" />
             <p className="scene-names__line">{invitation.coupleNames.invitationLine}</p>
           </div>
         </div>

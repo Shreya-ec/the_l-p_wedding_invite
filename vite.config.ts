@@ -7,7 +7,7 @@ function siteOrigin(): Plugin {
     name: "site-origin",
     transformIndexHtml(html) {
       const host = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL || "";
-      const origin = host ? `https://${host}` : "https://lakshay-weds-prerna.vercel.app";
+        const origin = host ? `https://${host}` : "https://prerna-weds-lakshay.vercel.app";
       return html.replaceAll("%SITE_ORIGIN%", origin);
     },
   };
