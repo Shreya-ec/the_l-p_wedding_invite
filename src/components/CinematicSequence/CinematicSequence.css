@@ -74,13 +74,6 @@
   opacity: 0;
 }
 
-.scene-logo {
-  width: clamp(4.4rem, 14vw, 8.5rem);
-  height: auto;
-  margin: 0 auto 0.35rem;
-  filter: drop-shadow(0 8px 16px rgba(247, 241, 232, 0.55));
-}
-
 .scene-title {
   margin: 0;
   max-width: min(92vw, 16ch);
@@ -136,11 +129,6 @@
 @media (max-height: 640px) and (orientation: landscape) {
   .scene-lettering {
     width: min(70vw, 28rem);
-  }
-
-  .scene-logo {
-    width: clamp(3.2rem, 10vh, 5rem);
-    margin-bottom: 0.15rem;
   }
 
   .scene-title {
@@ -269,15 +257,9 @@
 
 /* Scratch card: foil over the dates. Interactive only while this scene is shown. */
 .scene-two__scratch {
-  width: min(86cqw, 22rem);
-  min-height: max(3rem, min(12cqh, 5.6rem));
+  width: min(82cqw, 21rem);
+  min-height: clamp(4.25rem, 12cqh, 5.2rem);
   pointer-events: none;
-}
-
-@media (pointer: coarse) {
-  .scene-two__scratch {
-    min-height: max(3.25rem, min(14cqh, 6.2rem));
-  }
 }
 
 .scene-copy--two.is-interactive .scene-two__scratch {
@@ -294,7 +276,7 @@
   display: block;
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: min(8.2cqi, 2.1rem);
+  font-size: min(9.4cqi, 2rem);
   line-height: 1.1;
   white-space: nowrap;
   font-variant-numeric: lining-nums;
@@ -363,7 +345,7 @@
 
 /* ---- Names (centred on the pavilion) --------------------------------- */
 /*
- * The monogram sits on its own above the names. The names rest on a half-clear
+ * The names rest on a half-clear
  * ivory arch, the same soft stone and gold as the painted pavilion behind them.
  */
 
@@ -375,7 +357,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(0.2rem, 1.2dvh, 0.75rem);
+  gap: clamp(0.55rem, 1.6dvh, 0.9rem);
   box-sizing: border-box;
   padding:
     max(env(safe-area-inset-top), 0.75rem)
@@ -387,16 +369,6 @@
   opacity: 0;
   pointer-events: none;
   container-type: size;
-}
-
-.scene-names .scene-logo {
-  position: relative;
-  z-index: 1;
-  margin: 0;
-  flex: 0 0 auto;
-  width: clamp(2.8rem, 16cqh, 6rem);
-  max-height: 16cqh;
-  filter: drop-shadow(0 10px 18px rgba(141, 107, 50, 0.28));
 }
 
 .scene-names__glow {
@@ -417,9 +389,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: min(22.5rem, 78cqw);
-  gap: clamp(0.55rem, 1.6cqh, 0.85rem);
-  padding: clamp(2.35rem, 7cqh, 3.2rem) clamp(1.5rem, 5.5cqw, 2.15rem);
+  width: min(26rem, 86cqw);
+  margin-top: clamp(0.9rem, 2.6dvh, 1.45rem);
+  margin-bottom: clamp(0.9rem, 2.6dvh, 1.45rem);
+  gap: clamp(0.4rem, 1.2cqh, 0.7rem);
+  padding: clamp(1.7rem, 5cqh, 2.35rem) clamp(1.35rem, 5cqw, 2rem);
   isolation: isolate;
   /* The same arch on the top and the bottom, like a pavilion niche. */
   border-radius: 50% / 22%;
@@ -505,6 +479,43 @@
   }
 }
 
+.scene-names__logo {
+  position: relative;
+  z-index: 1;
+  width: clamp(7.25rem, 32cqw, 11rem);
+  height: auto;
+  margin: 0 0 0.15rem;
+}
+
+.scene-names__kicker,
+.scene-names__line {
+  position: relative;
+  z-index: 1;
+  width: min(22rem, calc(100% - 3.25rem));
+  margin: 0 auto;
+  padding-inline: 0.15rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.05rem, 3.6cqw, 1.35rem);
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  color: var(--gold-deep);
+  text-shadow: 0 1px 10px rgba(247, 241, 232, 0.95);
+}
+
+.scene-names__line {
+  color: var(--ink);
+  text-shadow: none;
+  padding: 0.45rem 1.15rem 0.55rem;
+  border-radius: 1.5rem;
+  background: radial-gradient(
+    ellipse 108% 95% at 50% 50%,
+    rgba(255, 250, 242, 0.94) 0%,
+    rgba(247, 241, 232, 0.82) 52%,
+    rgba(247, 241, 232, 0) 78%
+  );
+}
 .scene-names__ornament {
   width: min(9.5rem, 46%);
   margin: 0.1rem 0 0.15rem;
@@ -519,15 +530,33 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(2.5rem, min(11cqw, 16cqh), 4.6rem);
+  font-size: clamp(2.15rem, min(9cqw, 11cqh), 3.6rem);
   line-height: 0.95;
   color: var(--ink);
+}
+
+.scene-names__person {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.28rem;
 }
 
 .scene-names__name {
   display: block;
   letter-spacing: 0.06em;
   text-shadow: 0 1px 0 rgba(255, 250, 242, 0.9), 0 10px 22px rgba(196, 161, 92, 0.16);
+}
+
+.scene-names__parents {
+  display: block;
+  max-width: min(18rem, 100%);
+  font-family: var(--font-body);
+  font-size: clamp(0.8rem, 3.2cqw, 0.92rem);
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  color: var(--ink);
 }
 
 .scene-names__amp {
@@ -539,19 +568,30 @@
   text-shadow: 0 0 14px rgba(230, 211, 163, 0.7);
 }
 
-.scene-names__line {
-  max-width: 22rem;
-  margin: 0;
-  font-family: var(--font-body);
-  font-size: clamp(0.82rem, 2.4cqw, 1rem);
-  line-height: 1.6;
-  letter-spacing: 0.03em;
-  color: var(--ink-soft);
-}
+@media (max-width: 480px) {
+  .scene-names__kicker,
+  .scene-names__line {
+    width: calc(100% - 3.5rem);
+    font-size: 1.05rem;
+    padding-inline: 0.15rem;
+  }
 
-@media (max-height: 640px) and (orientation: landscape) {
-  .scene-names .scene-logo {
-    width: clamp(2.4rem, 14cqh, 3.6rem);
+  .scene-names__logo {
+    width: clamp(5.5rem, 36vw, 7.5rem);
+  }
+
+  .scene-names__title {
+    font-size: clamp(1.9rem, 8.6vw, 2.35rem);
+  }
+
+  .scene-names__parents {
+    font-size: 0.84rem;
+  }
+
+  .scene-names__lockup {
+    width: min(26rem, 84cqw);
+    margin-top: 1.05rem;
+    margin-bottom: 1.05rem;
   }
 }
 

@@ -81,7 +81,17 @@ export function ScratchCard({
     ctx.fillStyle = "rgba(60, 43, 46, 0.88)";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = `italic 500 ${Math.round(height * 0.36)}px "Cormorant Garamond", Georgia, serif`;
+    // Size the prompt so the gap from the words to the card edge is the same on every side.
+    ctx.font = `italic 500 100px "Cormorant Garamond", Georgia, serif`;
+    const widthRatio = ctx.measureText(prompt).width / 100 || 4;
+    const inkRatio = 0.72;
+    const minPad = Math.max(12, Math.min(width, height) * 0.16);
+    const fitWidth = (width - minPad * 2) / widthRatio;
+    const fitHeight = (height - minPad * 2) / inkRatio;
+    let fontSize = (width - height) / (widthRatio - inkRatio);
+    if (!Number.isFinite(fontSize) || fontSize <= 0) fontSize = Math.min(fitWidth, fitHeight);
+    fontSize = Math.min(fontSize, fitWidth, fitHeight);
+    ctx.font = `italic 500 ${Math.max(14, fontSize)}px "Cormorant Garamond", Georgia, serif`;
     ctx.fillText(prompt, width / 2, height / 2 + 1);
   }, [prompt]);
 

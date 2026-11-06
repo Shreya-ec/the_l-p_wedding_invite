@@ -298,13 +298,9 @@ export function OpeningEnvelope({ reducedMotion, onReveal, onDone, onPlay }: Ope
           <div className="env__card-content">
             <img className="env__card-monogram" src={invitation.logo} alt="" />
             <OrnamentDivider className="env__card-divider" />
-            <p className="env__card-names">
-              {coupleNames.first}
-              </p>
-              <span className="env__card-amp">&</span>
-              <p className="env__card-names">
-              {coupleNames.second}
-            </p>
+            <p className="env__card-names">{coupleNames.first}</p>
+            <span className="env__card-amp">&amp;</span>
+            <p className="env__card-names">{coupleNames.second}</p>
           </div>
         </div>
         </div>

@@ -124,10 +124,12 @@ export function CinematicSequence({
           ) : null}
         </div>
 
-        {/* Names: monogram above a half-clear ivory arch. */}
+        {/* Names on a half-clear ivory arch, centred on the pavilion. */}
         <div className="scene-names" aria-labelledby="scene-names-title">
           <span className="scene-names__glow" aria-hidden="true" />
-          <img className="scene-logo" src={invitation.logo} alt="LP monogram" />
+          <img className="scene-names__logo" src={invitation.logo} alt="P and L monogram" />
+          <p className="scene-names__kicker">{invitation.coupleNames.withFamilies}</p>
+          <OrnamentDivider className="scene-names__ornament" />
           <div className="scene-names__lockup">
             <span className="scene-names__jewel scene-names__jewel--top" aria-hidden="true" />
             <span className="scene-names__jewel scene-names__jewel--bottom" aria-hidden="true" />
@@ -146,13 +148,18 @@ export function CinematicSequence({
               />
             ))}
             <h2 id="scene-names-title" className="scene-names__title">
-              <span className="scene-names__name">{invitation.coupleNames.first}</span>
+              <span className="scene-names__person">
+                <span className="scene-names__name">{invitation.coupleNames.first}</span>
+                <span className="scene-names__parents">{invitation.coupleNames.firstFamily}</span>
+              </span>
               <span className="scene-names__amp">&amp;</span>
-              <span className="scene-names__name">{invitation.coupleNames.second}</span>
+              <span className="scene-names__person">
+                <span className="scene-names__name">{invitation.coupleNames.second}</span>
+                <span className="scene-names__parents">{invitation.coupleNames.secondFamily}</span>
+              </span>
             </h2>
-            <OrnamentDivider className="scene-names__ornament" />
-            <p className="scene-names__line">{invitation.coupleNames.invitationLine}</p>
           </div>
+          <p className="scene-names__line">{invitation.coupleNames.invitationLine}</p>
         </div>
 
         <div

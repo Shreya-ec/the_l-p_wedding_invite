@@ -96,10 +96,9 @@
 }
 
 .rsvp__monogram {
-  width: clamp(3.6rem, 10vw, 5rem);
+  width: clamp(5.5rem, 22vw, 8rem);
   height: auto;
-  margin: 0 0 0.85rem;
-  opacity: 0.92;
+  margin: 0 0 0.65rem;
 }
 
 @media (orientation: landscape) and (max-height: 560px) {

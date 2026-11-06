@@ -13,7 +13,7 @@ type Args = {
 
 /**
  * Scene animation controller for the cinematic sequence.
- * The names plaque, monogram, and invitation line are the hero of this chapter.
+ * The names plaque and invitation line are the hero of this chapter.
  */
 export function useSceneScroll({ root, enabled, settled, reducedMotion }: Args) {
   useLayoutEffect(() => {
@@ -39,11 +39,9 @@ export function useSceneScroll({ root, enabled, settled, reducedMotion }: Args) 
       const lockup = names.querySelector(".scene-names__lockup");
       const line = names.querySelector(".scene-names__line");
       const amp = names.querySelector(".scene-names__amp");
-      const logo = names.querySelector(".scene-logo");
       const lettering = titleOne.querySelector(".scene-lettering");
 
-      // Lockup settles in → LP monogram floats in above it → each name clears →
-      // gold "&" bounce → invitation line.
+      // Lockup settles in → each name clears → gold "&" bounce → invitation line.
       const namesReveal = gsap.timeline({ paused: true, defaults: { ease: "power2.out" } });
 
       if (!reducedMotion) {
@@ -53,12 +51,6 @@ export function useSceneScroll({ root, enabled, settled, reducedMotion }: Args) 
             { opacity: 0, scale: 0.92 },
             { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out" },
             0,
-          )
-          .fromTo(
-            logo,
-            { opacity: 0, scale: 0.85, y: -8 },
-            { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "power2.out" },
-            0.12,
           )
           .fromTo(
             nameEls[0],
@@ -81,7 +73,7 @@ export function useSceneScroll({ root, enabled, settled, reducedMotion }: Args) 
           .fromTo(line, { opacity: 0 }, { opacity: 1, duration: 0.45 }, 0.78)
           .set(nameEls, { clearProps: "filter" });
       } else {
-        namesReveal.to([lockup, logo, amp, line, ...nameEls], { opacity: 1, duration: 0.3 });
+        namesReveal.to([lockup, amp, line, ...nameEls], { opacity: 1, duration: 0.3 });
       }
 
       // Initial state: ready to reveal
@@ -102,7 +94,7 @@ export function useSceneScroll({ root, enabled, settled, reducedMotion }: Args) 
       // Play the classic bride and groom reveal when arriving at chapter 1
       const playCoupleReveal = () => {
         if (reducedMotion) {
-          gsap.set([lockup, logo, amp, line, ...nameEls], { opacity: 1 });
+          gsap.set([lockup, amp, line, ...nameEls], { opacity: 1 });
           return;
         }
         if (namesReveal.isActive()) return;

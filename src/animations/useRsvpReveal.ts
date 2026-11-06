@@ -1,7 +1,7 @@
 import { useLayoutEffect, type RefObject } from "react";
 import gsap from "gsap";
 import { onArrival, playToEnd } from "../stage/arrival";
-import { addDetailReveal, buildHeadingReveal } from "./reveals";
+import { buildHeadingReveal } from "./reveals";
 
 type Args = {
   root: RefObject<HTMLElement | null>;
@@ -11,7 +11,7 @@ type Args = {
 };
 
 /**
- * RSVP entrance: heading and monogram reveal smoothly on arrival.
+ * RSVP entrance: the heading reveals smoothly on arrival.
  */
 export function useRsvpReveal({ root, enabled, reducedMotion }: Args) {
   useLayoutEffect(() => {
@@ -27,8 +27,6 @@ export function useRsvpReveal({ root, enabled, reducedMotion }: Args) {
         rules: q(".rsvp__divider .ornament__rule"),
         gem: q(".rsvp__divider .ornament__gem"),
       });
-      addDetailReveal(headingTl, q(".rsvp__monogram"), 0, { y: 8, scale: 0.97, duration: 0.45 });
-
       const unsub = onArrival("rsvp", async ({ first }) => {
         if (!first) {
           headingTl.progress(1);

@@ -106,9 +106,16 @@ export type InvitationConfig = {
   /** The names scene that follows the opening title. */
   coupleNames: {
     first: string;
+    /** Parents, printed under the first name, e.g. "D/o …". */
+    firstFamily: string;
     second: string;
+    /** Parents, printed under the second name, e.g. "S/o …". */
+    secondFamily: string;
+    /** Small line above the names. */
+    withFamilies: string;
     invitationLine: string;
   };
+  /** Floral P & L monogram. */
   logo: string;
   /** Plays as soon as the guest opens the invitation. */
   song: {
@@ -144,7 +151,6 @@ export type InvitationConfig = {
     /** Names scene: fades in from namesStart; fades out from namesEnd. Same background. */
     namesStart: number;
     namesEnd: number;
-    logoFadeEnd: number;
     backgroundCrossfadeStart: number;
     backgroundCrossfadeEnd: number;
     sceneTwoTextStart: number;
@@ -198,10 +204,13 @@ export const invitation: InvitationConfig = {
   couplePhoto: "/images/couple.png",
   coupleNames: {
     first: "Prerna",
+    firstFamily: "D/o Mrs. Sudesh & Mr. Pardeep Rathee",
     second: "Lakshay",
-    invitationLine: "Together with their families, invite you to share their joy",
+    secondFamily: "S/o Mrs. Poonam & Mr. Anurag Sharma",
+    withFamilies: "Together with their families",
+    invitationLine: "cordially invite you to the joyous occasion of their wedding",
   },
-  logo: "/images/lp-logo.png",
+  logo: "/images/lp-monogram.png",
   song: {
     src: "/audio/tainu-leke.mp3",
     startSeconds: 25,
@@ -222,7 +231,6 @@ export const invitation: InvitationConfig = {
     titleFadeEnd: 0.18,
     namesStart: 0.16,
     namesEnd: 0.5,
-    logoFadeEnd: 0.28,
     backgroundCrossfadeStart: 0.52,
     backgroundCrossfadeEnd: 0.8,
     sceneTwoTextStart: 0.76,
