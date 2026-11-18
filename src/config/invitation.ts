@@ -269,6 +269,7 @@ export const invitation: InvitationConfig = {
         copyArea: { top: 7, right: 11, bottom: 51, left: 11 },
         events: [
           { id: "haldi", label: "Haldi Ceremony", time: "10:00 AM", dateTime: "10:00" },
+          { id: "baraat-reception", label: "Reception of Baraat", time: "7:00 PM", dateTime: "19:00" },
           { id: "dinner", label: "Dinner", time: "8:00 PM", dateTime: "20:00" },
         ],
       },
